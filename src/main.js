@@ -33,7 +33,7 @@ const terminalLines = [
 ];
 
 // Function to simulate typing effect
-function typeText(element, text, speed = 50) {
+function typeText(element, text, speed = 20) {
   return new Promise((resolve) => {
     let i = 0;
     element.classList.add('typing');
@@ -67,24 +67,24 @@ async function startBatcomputerSequence() {
     
     if (line === '') {
       terminalScreen.textContent += '\n';
-      await delay(200);
+      await delay(100);
     } else {
-      await typeText(terminalScreen, line, 30);
+      await typeText(terminalScreen, line, 15);
       terminalScreen.textContent += '\n';
       
       // Add extra delay for dramatic effect on certain lines
       if (line.includes('BATMAN PROTOCOL ACTIVATED') || 
           line.includes('ALERT:') || 
           line.includes('BATMAN IS COMING')) {
-        await delay(1000);
+        await delay(500);
       } else {
-        await delay(300);
+        await delay(150);
       }
     }
   }
   
   // Wait before starting fade out
-  await delay(2000);
+  await delay(1000);
   
   // Fade out terminal
   terminalScreen.classList.add('fade-out');
@@ -112,13 +112,13 @@ async function startBatcomputerSequence() {
         setTimeout(() => {
           batsignalDisplay.classList.remove('hidden');
           batsignalDisplay.classList.add('batsignal-appear');
-        }, 1000);
+        }, 500);
         
-      }, 800);
+      }, 400);
       
-    }, 500);
+    }, 250);
     
-  }, 2000);
+  }, 1000);
 }
 
 // Start the sequence when DOM is loaded
