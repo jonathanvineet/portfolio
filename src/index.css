@@ -114,24 +114,27 @@ html, body {
 /* Light Beam */
 #light-beam {
   position: absolute;
-  bottom: 15vh;
+  bottom: 10vh;
   left: 50%;
-  width: 600px;
-  height: 70vh;
+  width: 800px;
+  height: 80vh;
   background: linear-gradient(
     to top,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.3) 30%,
-    rgba(255, 255, 255, 0.2) 60%,
-    rgba(255, 255, 255, 0.1) 80%,
-    rgba(255, 255, 255, 0.05) 100%
+    rgba(255, 255, 153, 0.6) 0%,
+    rgba(255, 255, 153, 0.4) 30%,
+    rgba(255, 255, 153, 0.3) 60%,
+    rgba(255, 255, 153, 0.2) 80%,
+    rgba(255, 255, 153, 0.1) 100%
   );
-  clip-path: polygon(45% 100%, 55% 100%, 70% 0%, 30% 0%);
+  clip-path: polygon(40% 100%, 60% 100%, 75% 0%, 25% 0%);
   transform-origin: bottom center;
   transform: translateX(-50%);
   z-index: 2;
   opacity: 0;
   transition: opacity 1s ease-in;
+  box-shadow: 
+    0 0 100px rgba(255, 255, 153, 0.3),
+    0 0 200px rgba(255, 255, 153, 0.2);
 }
 
 .beam-appear {
@@ -144,58 +147,62 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L35 25 L20 20 L15 35 L25 50 L15 65 L20 80 L35 75 L50 85 L65 75 L80 80 L85 65 L75 50 L85 35 L80 20 L65 25 Z" fill="%23FFFFFF"/></svg>');
+  width: 300px;
+  height: 300px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 C45 10 40 12 35 15 L30 12 C25 15 20 20 18 25 L15 30 C12 35 10 40 10 45 C10 50 12 55 15 60 L18 65 C20 70 25 75 30 78 L35 75 C40 78 45 80 50 80 C55 80 60 78 65 75 L70 78 C75 75 80 70 82 65 L85 60 C88 55 90 50 90 45 C90 40 88 35 85 30 L82 25 C80 20 75 15 70 12 L65 15 C60 12 55 10 50 10 Z M50 20 C52 20 54 21 56 22 L58 20 C60 22 62 24 63 26 L61 28 C62 30 63 32 63 34 C63 36 62 38 61 40 L63 42 C62 44 60 46 58 48 L56 46 C54 47 52 48 50 48 C48 48 46 47 44 46 L42 48 C40 46 38 44 37 42 L39 40 C38 38 37 36 37 34 C37 32 38 30 39 28 L37 26 C38 24 40 22 42 20 L44 22 C46 21 48 20 50 20 Z" fill="%23000000"/><path d="M50 25 C48 25 46 26 44 27 L42 25 C41 26 40 27 39 28 L41 29 C40 30 39 31 39 32 C39 33 40 34 41 35 L39 36 C40 37 41 38 42 39 L44 37 C46 38 48 39 50 39 C52 39 54 38 56 37 L58 39 C59 38 60 37 61 36 L59 35 C60 34 61 33 61 32 C61 31 60 30 59 29 L61 28 C60 27 59 26 58 25 L56 27 C54 26 52 25 50 25 Z" fill="%23FFFFFF"/></svg>');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  filter: blur(20px) brightness(30%) contrast(300%);
+  filter: blur(15px) brightness(50%) contrast(200%);
   opacity: 0;
   z-index: 4;
 }
 
 .batsignal-appear {
   opacity: 1;
-  animation: batsignal-flicker-then-stable 4s ease-out forwards;
+  animation: batsignal-flicker-then-stable 5s ease-out forwards;
 }
 
 @keyframes batsignal-flicker-then-stable {
   0% {
-    filter: blur(20px) brightness(30%) contrast(300%);
-    transform: scale(0.8);
+    filter: blur(15px) brightness(50%) contrast(200%) drop-shadow(0 0 20px #ffff99);
+    transform: translate(-50%, -50%) scale(0.9);
   }
-  15% {
-    filter: blur(8px) brightness(200%) contrast(200%) drop-shadow(0 0 30px #ffff99);
-    transform: scale(0.9);
+  10% {
+    filter: blur(25px) brightness(20%) contrast(250%);
+    transform: translate(-50%, -50%) scale(0.85);
   }
-  25% {
-    filter: blur(15px) brightness(80%) contrast(250%);
-    transform: scale(0.85);
+  20% {
+    filter: blur(5px) brightness(300%) contrast(150%) drop-shadow(0 0 40px #ffff99);
+    transform: translate(-50%, -50%) scale(0.95);
   }
-  35% {
-    filter: blur(5px) brightness(250%) contrast(180%) drop-shadow(0 0 40px #ffff99);
-    transform: scale(0.95);
+  30% {
+    filter: blur(20px) brightness(40%) contrast(220%);
+    transform: translate(-50%, -50%) scale(0.88);
   }
-  45% {
-    filter: blur(12px) brightness(100%) contrast(220%);
-    transform: scale(0.88);
+  40% {
+    filter: blur(3px) brightness(400%) contrast(130%) drop-shadow(0 0 60px #ffff99);
+    transform: translate(-50%, -50%) scale(0.98);
   }
-  55% {
-    filter: blur(3px) brightness(300%) contrast(160%) drop-shadow(0 0 50px #ffff99);
-    transform: scale(0.98);
+  50% {
+    filter: blur(18px) brightness(60%) contrast(200%);
+    transform: translate(-50%, -50%) scale(0.9);
   }
-  65% {
-    filter: blur(8px) brightness(150%) contrast(200%);
-    transform: scale(0.92);
+  60% {
+    filter: blur(2px) brightness(500%) contrast(120%) drop-shadow(0 0 80px #ffff99);
+    transform: translate(-50%, -50%) scale(1);
   }
-  75% {
-    filter: blur(2px) brightness(350%) contrast(140%) drop-shadow(0 0 60px #ffff99);
-    transform: scale(1);
+  70% {
+    filter: blur(10px) brightness(100%) contrast(180%);
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  80% {
+    filter: blur(1px) brightness(600%) contrast(110%) drop-shadow(0 0 100px #ffff99) drop-shadow(0 0 150px #ffcc00);
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
-    filter: blur(1px) brightness(400%) contrast(120%) drop-shadow(0 0 80px #ffff99) drop-shadow(0 0 120px #ffcc00);
-    transform: scale(1);
+    filter: blur(0px) brightness(800%) contrast(100%) drop-shadow(0 0 120px #ffff99) drop-shadow(0 0 200px #ffcc00) drop-shadow(0 0 300px rgba(255, 255, 153, 0.5));
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 

@@ -10,24 +10,24 @@ const terminalLines = [
   'WAYNE ENTERPRISES SECURE TERMINAL v3.7.1',
   'Initializing BatOS...',
   '',
-  'Loading secure protocols................ [OK]',
-  'Accessing encrypted network............ [OK]',
-  'Connecting to Cave mainframe........... [OK]',
-  'Verifying biometric authentication..... [OK]',
+  'Loading secure protocols........... [OK]',
+  'Accessing encrypted network........ [OK]',
+  'Connecting to Cave mainframe....... [OK]',
+  'Verifying biometric auth........... [OK]',
   '',
   'BATMAN PROTOCOL ACTIVATED',
   '',
-  'Scanning Gotham City surveillance...... [OK]',
-  'Analyzing crime patterns............... [OK]',
-  'Cross-referencing GCPD database........ [OK]',
-  'Monitoring emergency frequencies....... [OK]',
+  'Scanning Gotham surveillance....... [OK]',
+  'Analyzing crime patterns........... [OK]',
+  'Cross-referencing GCPD database.... [OK]',
+  'Monitoring emergency frequencies... [OK]',
   '',
   'ALERT: Priority signal detected',
   'Commissioner Gordon - Signal activated',
   '',
-  'Initiating response protocol...........',
-  'Preparing vehicle systems..............',
-  'Activating Bat-Signal..................',
+  'Initiating response protocol.......',
+  'Preparing vehicle systems..........',
+  'Activating Bat-Signal..............',
   '',
   'BATMAN IS COMING...'
 ];
@@ -76,15 +76,15 @@ async function startBatcomputerSequence() {
       if (line.includes('BATMAN PROTOCOL ACTIVATED') || 
           line.includes('ALERT:') || 
           line.includes('BATMAN IS COMING')) {
-        await delay(500);
+        await delay(300);
       } else {
-        await delay(150);
+        await delay(100);
       }
     }
   }
   
   // Wait before starting fade out
-  await delay(1000);
+  await delay(500);
   
   // Fade out terminal
   terminalScreen.classList.add('fade-out');
@@ -112,13 +112,13 @@ async function startBatcomputerSequence() {
         setTimeout(() => {
           batsignalDisplay.classList.remove('hidden');
           batsignalDisplay.classList.add('batsignal-appear');
-        }, 500);
+        }, 300);
         
-      }, 400);
+      }, 200);
       
-    }, 250);
+    }, 150);
     
-  }, 1000);
+  }, 800);
 }
 
 // Start the sequence when DOM is loaded
