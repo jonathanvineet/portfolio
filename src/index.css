@@ -2,7 +2,7 @@ html,body {
 	margin:0;
 	padding:0;
 	height:100%;
-	background:#000;
+	background:linear-gradient(to bottom, #1a1a2e, #16213e, #0f3460);
 	font-family: system-ui, Arial, sans-serif;
 	color:#eee;
 	overflow:hidden;
@@ -22,7 +22,7 @@ html,body {
 	display:flex;
 	align-items:center;
 	justify-content:center;
-	background:radial-gradient(circle at center, rgba(0,0,0,0.1), rgba(0,0,0,0.9));
+	background:radial-gradient(circle at center, rgba(26,26,46,0.1), rgba(15,52,96,0.9));
 	opacity:0;
 	pointer-events:none;
 	transition:opacity 1.4s ease;
@@ -57,45 +57,19 @@ html,body {
 .intro-fade-out canvas.webgl { animation: fadeOut 1.6s forwards ease; }
 @keyframes fadeOut { to { opacity:0; filter:blur(4px); } }
 
-/* ---- Optimized Canvas Rain ---- */
-.rain-canvas {
-	position:fixed;
-	inset:0;
-	width:100%;
-	height:100%;
-	pointer-events:none;
-	z-index:160; /* Above text & 3D during intro */
-	mix-blend-mode:screen;
-	opacity:1;
-	transition:opacity 1.2s ease;
-}
-.rain-canvas.fade-out { opacity:0; }
-
-/* Splash highlight on letters when hit */
-#batcomputer-init span.letter.hit {
-	color:#fff;
-	text-shadow:0 0 6px rgba(255,255,255,0.4), 0 0 12px rgba(255,214,74,0.3), 0 0 24px rgba(255,214,74,0.2);
-	animation:letter-hit 1.2s ease-out forwards;
-}
-#batcomputer-init span.letter { display:inline-block; padding:0 1px; }
-@keyframes letter-hit {
-	0% { filter:brightness(2) saturate(1.5); }
-	40% { filter:brightness(1.2) saturate(1.1); }
-	100% { filter:brightness(1) saturate(1); }
+/* Performance optimizations */
+* {
+    box-sizing: border-box;
 }
 
-/* Add glow effect to the bat logo */
-.bat-logo {
-    position: relative;
-    display: inline-block;
+/* Smooth transitions */
+.welcome-inner h1, .welcome-inner p {
+    transform: translateZ(0); /* Hardware acceleration */
 }
 
-.bat-logo img {
-    display: block;
-    margin: 0 auto;
-    box-shadow: 0 0 30px 15px rgba(255, 255, 0, 0.9), 0 0 60px 30px rgba(255, 255, 0, 0.7), 0 0 90px 45px rgba(255, 255, 0, 0.5);
-    border-radius: 50%;
+/* Rain effect styling */
+.rain-particle {
+    pointer-events: none;
+    will-change: transform;
 }
-
-
 
