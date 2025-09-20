@@ -70,8 +70,8 @@ createStarfield(STAR_COUNT);
 // -------- Rain Physics System --------
 class RainDrop {
     constructor() {
-        this.reset();
         this.velocity = new THREE.Vector3();
+        this.position = new THREE.Vector3();
         this.gravity = -9.8;
         this.bounce = 0.3;
         this.friction = 0.95;
@@ -80,11 +80,12 @@ class RainDrop {
         this.splashing = false;
         this.splashTime = 0;
         this.onLogo = false;
+        this.reset();
     }
 
     reset() {
         // Spawn rain above the scene
-        this.position = new THREE.Vector3(
+        this.position.set(
             (Math.random() - 0.5) * 12,
             8 + Math.random() * 4,
             (Math.random() - 0.5) * 12
