@@ -8,7 +8,7 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 
 // -------- Optimized Config --------
 const MODEL_URL = '/models/batman_logo.glb';
-const ZOOM_DURATION = 3800; // Faster intro
+const ZOOM_DURATION = 6000; // Slower intro for more dramatic effect
 const BLOOM_PARAMS = { strength: 0.25, radius: 0.4, threshold: 0.4 };
 const STAR_COUNT = 800; // Reduced for performance
 
@@ -36,12 +36,12 @@ root.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = createRainyNightSky();
 const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 100);
-const START_Z = 4.5; const INSIDE_Z = -0.4;
+const START_Z = 8.5; const INSIDE_Z = -0.4; // Start from much farther away
 camera.position.set(0, 0, START_Z);
 scene.add(camera);
 
-// -------- Enhanced Lighting for Rain --------
-const keyLight = new THREE.DirectionalLight(0x9bb5ff, 1.8); // Cool overcast light
+// -------- Enhanced Lighting for Rain and Logo Highlight --------
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.0); // Bright white light for clear reflections
 keyLight.position.set(6, 8, 4);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.width = 1024;
@@ -50,11 +50,23 @@ keyLight.shadow.camera.near = 0.5;
 keyLight.shadow.camera.far = 50;
 scene.add(keyLight);
 
-const rimLight = new THREE.DirectionalLight(0x4a6fa5, 0.6);
+// Add spotlight to create a focused highlight on the logo
+const spotLight = new THREE.SpotLight(0xffffff, 2.0);
+spotLight.position.set(3, 5, 2);
+spotLight.angle = Math.PI / 6;
+spotLight.penumbra = 0.2;
+spotLight.decay = 1;
+spotLight.distance = 50;
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+scene.add(spotLight);
+
+const rimLight = new THREE.DirectionalLight(0x4a6fa5, 0.8); // Slightly stronger rim light
 rimLight.position.set(-4, -2, -3);
 scene.add(rimLight);
 
-const ambientLight = new THREE.AmbientLight(0x2c3e50, 0.4); // Darker ambient for stormy feel
+const ambientLight = new THREE.AmbientLight(0x2c3e50, 0.3); // Darker ambient for better contrast
 scene.add(ambientLight);
 
 scene.fog = new THREE.FogExp2(0x1a1a2e, 0.03); // Reduced fog density
@@ -116,24 +128,38 @@ gltfLoader.load(MODEL_URL, (gltf) => {
             obj.castShadow = true;
             obj.receiveShadow = true;
             
-            // Create realistic Batman logo material
+            // Create metallic grey Batman logo material with reflective highlights
             const material = new THREE.MeshStandardMaterial({
-                color: 0x808080, // Grey base
-                metalness: 0.2,
-                roughness: 0.8,
+                color: 0xa0a0a0, // Lighter grey base
+                metalness: 0.8, // More metallic
+                roughness: 0.2, // Less rough for more reflection
                 transparent: false, // Completely opaque
-                side: THREE.DoubleSide
+                side: THREE.DoubleSide,
+                envMapIntensity: 1.5 // Enhance reflection intensity
             });
             
-            // Add gradient effect
+            // Add simulated light reflection effect
             material.onBeforeCompile = (shader) => {
                 shader.fragmentShader = shader.fragmentShader.replace(
                     '#include <color_fragment>',
                     `
                     #include <color_fragment>
-                    // Add gradient from grey to dark grey
-                    float gradient = (vNormal.y + 1.0) * 0.5;
-                    vec3 greyColor = mix(vec3(0.25, 0.25, 0.25), vec3(0.5, 0.5, 0.5), gradient);
+                    // Add light reflection effect with moving highlight
+                    float time = vNormal.x * 5.0 + vNormal.y * 3.0;
+                    
+                    // Light gray to dark gray with highlight
+                    float highlight = pow(abs(sin(time * 0.5)), 8.0) * 0.6;
+                    float edge = pow(abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 3.0) * 0.7;
+                    
+                    // Create metallic grey appearance with light hitting from top right
+                    vec3 baseGrey = vec3(0.7, 0.7, 0.7);
+                    vec3 darkGrey = vec3(0.3, 0.3, 0.3);
+                    vec3 highlightColor = vec3(1.0, 1.0, 1.0);
+                    
+                    // Combine colors based on angle to simulate light reflection
+                    vec3 greyColor = mix(darkGrey, baseGrey, vNormal.y * 0.5 + 0.5);
+                    greyColor = mix(greyColor, highlightColor, highlight * edge);
+                    
                     diffuseColor.rgb = greyColor;
                     `
                 );
@@ -147,17 +173,24 @@ gltfLoader.load(MODEL_URL, (gltf) => {
         }
     });
     
-    // Scale and center the logo
-    const box = new THREE.Box3().setFromObject(gltf.scene);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 2.8 / maxDim;
-    gltf.scene.scale.setScalar(scale);
+    // Improved scaling and centering of the logo
+    // First apply scaling
+    const baseScale = 2.8;
+    const widthScale = baseScale * 1.2; // Slightly wider
+    const heightScale = baseScale * 1.6; // Longer in height
+    const depthScale = baseScale * 1.0; // Keep original depth
     
+    gltf.scene.scale.set(widthScale, heightScale, depthScale);
+    
+    // Then calculate the bounding box AFTER scaling
+    const box = new THREE.Box3().setFromObject(gltf.scene);
     const center = new THREE.Vector3();
     box.getCenter(center);
-    gltf.scene.position.sub(center.multiplyScalar(scale));
+    
+    // Apply the negative center offset to center the model perfectly
+    gltf.scene.position.x = -center.x;
+    gltf.scene.position.y = -center.y;
+    gltf.scene.position.z = -center.z;
     
     modelLoaded = true;
     updateOutlineSelection();
@@ -349,35 +382,46 @@ function animate() {
     const dt = Math.min(clock.getDelta(), 0.016); // Cap delta time for stability
     totalTime += dt;
     
-    // Enhanced logo movement for more realistic motion
+    // Natural spin animation on single axis (Y-axis)
     if (logoGroup) {
-        // Organic rotation with slight speed variation
-        const rotationSpeed = 0.25 + Math.sin(totalTime * 0.3) * 0.05;
-        logoGroup.rotation.y += rotationSpeed * dt;
+        // Smooth natural rotation on Y-axis only
+        const baseRotationSpeed = 0.4; // Moderate base speed
+        const speedVariation = Math.sin(totalTime * 0.2) * 0.05; // Subtle natural speed variation
+        const rotationSpeedY = baseRotationSpeed + speedVariation; // Natural speed with slight variation
+        logoGroup.rotation.y += rotationSpeedY * dt;
         
-        // Subtle vertical floating motion
-        const floatAmplitude = 0.08;
-        const floatFrequency = 0.8;
+        // Reset other rotations to zero (we want Y-axis rotation only)
+        logoGroup.rotation.x = Math.sin(totalTime * 0.3) * 0.03; // Tiny wobble for natural feel
+        logoGroup.rotation.z = Math.sin(totalTime * 0.25) * 0.02; // Tiny wobble for natural feel
+        
+        // Subtle vertical floating motion (reduced for more stability)
+        const floatAmplitude = 0.03;
+        const floatFrequency = 0.5;
         logoGroup.position.y = Math.sin(totalTime * floatFrequency) * floatAmplitude;
         
-        // Very subtle horizontal drift
-        const driftAmplitude = 0.03;
-        const driftFrequency = 0.4;
+        // Very subtle horizontal drift (reduced for more stability)
+        const driftAmplitude = 0.01;
+        const driftFrequency = 0.25;
         logoGroup.position.x = Math.sin(totalTime * driftFrequency + Math.PI * 0.3) * driftAmplitude;
-        
-        // Slight tilt variation for more organic feel
-        const tiltAmplitude = 0.02;
-        const tiltFrequency = 0.6;
-        logoGroup.rotation.x = Math.sin(totalTime * tiltFrequency) * tiltAmplitude;
-        logoGroup.rotation.z = Math.cos(totalTime * tiltFrequency * 0.7) * tiltAmplitude * 0.5;
     }
     
-    // Camera animation during intro
+    // Enhanced camera animation during intro with natural zoom curve
     if (startTime && !introDone) {
         const t = performance.now() - startTime;
         const p = Math.min(t / ZOOM_DURATION, 1);
-        const eased = easeInOutSine(p);
+        
+        // Enhanced easing function for more natural camera movement
+        // Start slow, accelerate in the middle, then slow down again at the end
+        const eased = enhancedEaseInOut(p);
+        
         camera.position.z = START_Z + (INSIDE_Z - START_Z) * eased;
+        
+        // Add subtle camera sway for more dramatic effect
+        if (p > 0.1 && p < 0.9) {
+            const swayAmount = 0.05 * Math.sin(p * Math.PI * 3) * (1 - p);
+            camera.position.x = swayAmount;
+            camera.position.y = swayAmount * 0.7;
+        }
         
         // Fade outline near end
         if (p > 0.8 && outlinePass) {
@@ -418,6 +462,27 @@ window.addEventListener('resize', () => {
 // -------- Utility Functions --------
 function easeInOutSine(x) { 
     return -(Math.cos(Math.PI * x) - 1) / 2; 
+}
+
+// Enhanced easing function for more dramatic camera movement
+function enhancedEaseInOut(x) {
+    // Custom easing function that starts slow, speeds up in the middle, and slows down at the end
+    // This creates a more natural and cinematic camera movement
+    
+    // First part: slow start (first 30%)
+    if (x < 0.3) {
+        return 0.5 * Math.pow(x / 0.3, 2);
+    }
+    // Middle part: moderate speed (from 30% to 70%)
+    else if (x < 0.7) {
+        const t = (x - 0.3) / 0.4;
+        return 0.5 + 0.4 * t;
+    }
+    // End part: gradual slowdown (last 30%)
+    else {
+        const t = (x - 0.7) / 0.3;
+        return 0.9 + 0.1 * (1 - Math.pow(1 - t, 2));
+    }
 }
 
 function createRainyNightSky() {
