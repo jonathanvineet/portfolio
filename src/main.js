@@ -11,7 +11,6 @@ const MODEL_URL = '/models/batman_logo.glb';
 const ZOOM_DURATION = 3800; // Faster intro
 const BLOOM_PARAMS = { strength: 0.25, radius: 0.4, threshold: 0.4 };
 const STAR_COUNT = 800; // Reduced for performance
-const RAIN_COUNT = 150; // Optimized rain particle count
 
 // -------- DOM refs --------
 const root = document.getElementById('intro-root');
@@ -58,224 +57,13 @@ scene.add(rimLight);
 const ambientLight = new THREE.AmbientLight(0x2c3e50, 0.4); // Darker ambient for stormy feel
 scene.add(ambientLight);
 
-scene.fog = new THREE.FogExp2(0x1a1a2e, 0.05); // Atmospheric fog
+scene.fog = new THREE.FogExp2(0x1a1a2e, 0.03); // Reduced fog density
 
 let logoGroup = new THREE.Group();
-let logoMesh = null; // Reference to the actual logo mesh for collision
-let logoBoundingBox = new THREE.Box3();
+let logoMesh = null; // Reference to the actual logo mesh
 scene.add(logoGroup);
 
 createStarfield(STAR_COUNT);
-
-// -------- Rain Physics System --------
-class RainDrop {
-    constructor() {
-        this.velocity = new THREE.Vector3();
-        this.position = new THREE.Vector3();
-        this.gravity = -9.8;
-        this.bounce = 0.3;
-        this.friction = 0.95;
-        this.life = 1.0;
-        this.maxLife = 1.0;
-        this.splashing = false;
-        this.splashTime = 0;
-        this.onLogo = false;
-        this.reset();
-    }
-
-    reset() {
-        // Spawn rain above the scene
-        this.position.set(
-            (Math.random() - 0.5) * 12,
-            8 + Math.random() * 4,
-            (Math.random() - 0.5) * 12
-        );
-        this.velocity.set(
-            (Math.random() - 0.5) * 0.5, // Slight horizontal drift
-            -8 - Math.random() * 4, // Downward velocity
-            (Math.random() - 0.5) * 0.5
-        );
-        this.life = this.maxLife = 0.8 + Math.random() * 0.4;
-        this.splashing = false;
-        this.splashTime = 0;
-        this.onLogo = false;
-    }
-
-    update(deltaTime) {
-        if (this.splashing) {
-            this.splashTime += deltaTime;
-            this.life -= deltaTime * 3;
-            if (this.splashTime > 0.2 || this.life <= 0) {
-                this.reset();
-            }
-            return;
-        }
-
-        // Apply gravity
-        this.velocity.y += this.gravity * deltaTime;
-        
-        // Update position
-        this.position.add(this.velocity.clone().multiplyScalar(deltaTime));
-
-        // Check collision with logo
-        if (logoMesh && this.checkLogoCollision()) {
-            this.handleLogoCollision();
-        }
-
-        // Reset if too far down or out of bounds
-        if (this.position.y < -6 || Math.abs(this.position.x) > 15 || Math.abs(this.position.z) > 15) {
-            this.reset();
-        }
-
-        this.life -= deltaTime * 0.1;
-        if (this.life <= 0) {
-            this.reset();
-        }
-    }
-
-    checkLogoCollision() {
-        if (!logoMesh) return false;
-        
-        // Simple bounding box collision first
-        if (!logoBoundingBox.containsPoint(this.position)) {
-            return false;
-        }
-
-        // More precise collision using raycasting
-        const raycaster = new THREE.Raycaster();
-        const direction = this.velocity.clone().normalize();
-        raycaster.set(this.position, direction);
-        
-        const intersects = raycaster.intersectObject(logoMesh, true);
-        return intersects.length > 0 && intersects[0].distance < 0.1;
-    }
-
-    handleLogoCollision() {
-        this.onLogo = true;
-        
-        // Create splash effect
-        this.splashing = true;
-        this.splashTime = 0;
-        
-        // Bounce off with reduced velocity
-        this.velocity.multiplyScalar(this.bounce);
-        this.velocity.y = Math.abs(this.velocity.y) * 0.5; // Bounce up slightly
-        
-        // Add some randomness to the bounce
-        this.velocity.x += (Math.random() - 0.5) * 2;
-        this.velocity.z += (Math.random() - 0.5) * 2;
-    }
-}
-
-class RainSystem {
-    constructor() {
-        this.drops = [];
-        this.geometry = new THREE.BufferGeometry();
-        this.positions = new Float32Array(RAIN_COUNT * 3);
-        this.colors = new Float32Array(RAIN_COUNT * 3);
-        this.sizes = new Float32Array(RAIN_COUNT);
-        
-        // Initialize rain drops
-        for (let i = 0; i < RAIN_COUNT; i++) {
-            this.drops.push(new RainDrop());
-        }
-
-        // Create geometry attributes
-        this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-        this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
-        this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
-
-        // Rain material with realistic water properties
-        this.material = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                attribute float size;
-                attribute vec3 color;
-                varying vec3 vColor;
-                varying float vSize;
-                uniform float time;
-                
-                void main() {
-                    vColor = color;
-                    vSize = size;
-                    
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = size * (300.0 / -mvPosition.z);
-                    gl_Position = projectionMatrix * mvPosition;
-                }
-            `,
-            fragmentShader: `
-                varying vec3 vColor;
-                varying float vSize;
-                uniform float time;
-                
-                void main() {
-                    vec2 center = gl_PointCoord - 0.5;
-                    float dist = length(center);
-                    
-                    if (dist > 0.5) discard;
-                    
-                    // Create water droplet effect
-                    float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
-                    alpha *= 0.8;
-                    
-                    // Add slight shimmer
-                    float shimmer = sin(time * 10.0 + dist * 20.0) * 0.1 + 0.9;
-                    
-                    gl_FragColor = vec4(vColor * shimmer, alpha);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-
-        this.points = new THREE.Points(this.geometry, this.material);
-        scene.add(this.points);
-    }
-
-    update(deltaTime) {
-        this.material.uniforms.time.value += deltaTime;
-
-        for (let i = 0; i < this.drops.length; i++) {
-            const drop = this.drops[i];
-            drop.update(deltaTime);
-
-            // Update geometry
-            const i3 = i * 3;
-            this.positions[i3] = drop.position.x;
-            this.positions[i3 + 1] = drop.position.y;
-            this.positions[i3 + 2] = drop.position.z;
-
-            // Color based on state
-            if (drop.splashing) {
-                this.colors[i3] = 0.8;     // R - bright splash
-                this.colors[i3 + 1] = 0.9; // G
-                this.colors[i3 + 2] = 1.0; // B
-                this.sizes[i] = 8 + Math.sin(drop.splashTime * 20) * 4;
-            } else if (drop.onLogo) {
-                this.colors[i3] = 0.6;     // R - on logo
-                this.colors[i3 + 1] = 0.8; // G
-                this.colors[i3 + 2] = 1.0; // B
-                this.sizes[i] = 3;
-            } else {
-                this.colors[i3] = 0.4;     // R - falling
-                this.colors[i3 + 1] = 0.6; // G
-                this.colors[i3 + 2] = 0.9; // B
-                this.sizes[i] = 2 + Math.random();
-            }
-        }
-
-        // Update geometry
-        this.geometry.attributes.position.needsUpdate = true;
-        this.geometry.attributes.color.needsUpdate = true;
-        this.geometry.attributes.size.needsUpdate = true;
-    }
-}
-
-const rainSystem = new RainSystem();
 
 // -------- BatComputer Text Animation --------
 const batComputerText = document.createElement('div');
@@ -310,7 +98,6 @@ function addPlaceholder() {
     mesh.receiveShadow = true;
     logoGroup.add(mesh);
     logoMesh = mesh;
-    logoBoundingBox.setFromObject(mesh);
 }
 
 const gltfLoader = new GLTFLoader();
@@ -355,7 +142,7 @@ gltfLoader.load(MODEL_URL, (gltf) => {
             obj.material = material;
             
             if (!logoMesh) {
-                logoMesh = obj; // Store reference for collision
+                logoMesh = obj; // Store reference
             }
         }
     });
@@ -371,9 +158,6 @@ gltfLoader.load(MODEL_URL, (gltf) => {
     const center = new THREE.Vector3();
     box.getCenter(center);
     gltf.scene.position.sub(center.multiplyScalar(scale));
-    
-    // Update bounding box for collision detection
-    logoBoundingBox.setFromObject(gltf.scene);
     
     modelLoaded = true;
     updateOutlineSelection();
@@ -450,11 +234,83 @@ function finishIntro() {
     
     setTimeout(() => {
         welcome.classList.remove('hidden');
-        requestAnimationFrame(() => welcome.classList.add('show'));
+        requestAnimationFrame(() => {
+            welcome.classList.add('show');
+            // Start the 2D rain effect after intro
+            makeItRain();
+        });
     }, 300);
 }
 
 skipBtn.addEventListener('click', finishIntro);
+
+// -------- 2D Rain System (Converted from jQuery) --------
+function makeItRain() {
+    // Clear out everything
+    const frontRow = document.querySelector('.rain.front-row');
+    const backRow = document.querySelector('.rain.back-row');
+    
+    if (frontRow) frontRow.innerHTML = '';
+    if (backRow) backRow.innerHTML = '';
+
+    let increment = 0;
+    let drops = "";
+    let backDrops = "";
+
+    while (increment < 100) {
+        // Random number between 98 and 1
+        const randoHundo = Math.floor(Math.random() * (98 - 1 + 1) + 1);
+        // Random number between 5 and 2
+        const randoFiver = Math.floor(Math.random() * (5 - 2 + 1) + 2);
+        // Increment
+        increment += randoFiver;
+        
+        // Add in a new raindrop with various randomizations
+        drops += `<div class="drop" style="left: ${increment}%; bottom: ${(randoFiver + randoFiver - 1 + 100)}%; animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;">
+            <div class="stem" style="animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;"></div>
+            <div class="splat" style="animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;"></div>
+        </div>`;
+        
+        backDrops += `<div class="drop" style="right: ${increment}%; bottom: ${(randoFiver + randoFiver - 1 + 100)}%; animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;">
+            <div class="stem" style="animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;"></div>
+            <div class="splat" style="animation-delay: 0.${randoHundo}s; animation-duration: 0.5${randoHundo}s;"></div>
+        </div>`;
+    }
+
+    if (frontRow) frontRow.insertAdjacentHTML('beforeend', drops);
+    if (backRow) backRow.insertAdjacentHTML('beforeend', backDrops);
+}
+
+// Rain toggle event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const splatToggle = document.querySelector('.splat-toggle.toggle');
+    const backRowToggle = document.querySelector('.back-row-toggle.toggle');
+    const singleToggle = document.querySelector('.single-toggle.toggle');
+
+    if (splatToggle) {
+        splatToggle.addEventListener('click', () => {
+            document.body.classList.toggle('splat-toggle');
+            splatToggle.classList.toggle('active');
+            makeItRain();
+        });
+    }
+
+    if (backRowToggle) {
+        backRowToggle.addEventListener('click', () => {
+            document.body.classList.toggle('back-row-toggle');
+            backRowToggle.classList.toggle('active');
+            makeItRain();
+        });
+    }
+
+    if (singleToggle) {
+        singleToggle.addEventListener('click', () => {
+            document.body.classList.toggle('single-toggle');
+            singleToggle.classList.toggle('active');
+            makeItRain();
+        });
+    }
+});
 
 // -------- Post-processing --------
 const composer = new EffectComposer(renderer);
@@ -483,19 +339,38 @@ outlinePass.visibleEdgeColor.set(0xffd64a);
 outlinePass.hiddenEdgeColor.set(0x000000);
 composer.addPass(outlinePass);
 
-// -------- Optimized Render Loop --------
+// -------- Enhanced Render Loop with Realistic Logo Movement --------
 const clock = new THREE.Clock();
 let frameCount = 0;
+let totalTime = 0;
 
 function animate() {
     requestAnimationFrame(animate);
     const dt = Math.min(clock.getDelta(), 0.016); // Cap delta time for stability
+    totalTime += dt;
     
-    // Update logo rotation
-    logoGroup.rotation.y += 0.25 * dt;
-    
-    // Update rain physics
-    rainSystem.update(dt);
+    // Enhanced logo movement for more realistic motion
+    if (logoGroup) {
+        // Organic rotation with slight speed variation
+        const rotationSpeed = 0.25 + Math.sin(totalTime * 0.3) * 0.05;
+        logoGroup.rotation.y += rotationSpeed * dt;
+        
+        // Subtle vertical floating motion
+        const floatAmplitude = 0.08;
+        const floatFrequency = 0.8;
+        logoGroup.position.y = Math.sin(totalTime * floatFrequency) * floatAmplitude;
+        
+        // Very subtle horizontal drift
+        const driftAmplitude = 0.03;
+        const driftFrequency = 0.4;
+        logoGroup.position.x = Math.sin(totalTime * driftFrequency + Math.PI * 0.3) * driftAmplitude;
+        
+        // Slight tilt variation for more organic feel
+        const tiltAmplitude = 0.02;
+        const tiltFrequency = 0.6;
+        logoGroup.rotation.x = Math.sin(totalTime * tiltFrequency) * tiltAmplitude;
+        logoGroup.rotation.z = Math.cos(totalTime * tiltFrequency * 0.7) * tiltAmplitude * 0.5;
+    }
     
     // Camera animation during intro
     if (startTime && !introDone) {
@@ -517,7 +392,7 @@ function animate() {
         camera.lookAt(0, 0, 0);
     }
     
-    // Render every frame for smooth rain physics
+    // Render the scene
     composer.render();
     frameCount++;
 }
@@ -602,6 +477,5 @@ function updateOutlineSelection() {
 window.__skipIntro = finishIntro;
 window.__getPerformanceStats = () => ({
     frameCount,
-    rainDrops: RAIN_COUNT,
     stars: STAR_COUNT
 });

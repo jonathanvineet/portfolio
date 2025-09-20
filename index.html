@@ -6,13 +6,20 @@
     <title>Portfolio</title>
     <link rel="stylesheet" href="src/index.css">
 </head>
-<body>
+<body class="back-row-toggle splat-toggle">
     <div id="intro-root"></div>
     <div id="welcome" class="hidden">
         <div class="welcome-inner">
             <h1>Welcome to the Batcave</h1>
             <p>This is the portfolio. Justice served in code.</p>
         </div>
+    </div>
+    <div class="rain front-row"></div>
+    <div class="rain back-row"></div>
+    <div class="toggles">
+        <div class="splat-toggle toggle active">SPLAT</div>
+        <div class="back-row-toggle toggle active">BACK<br>ROW</div>
+        <div class="single-toggle toggle">SINGLE</div>
     </div>
     <button id="skip-intro" class="skip">Skip</button>
     <script type="module" src="src/main.js"></script>
