@@ -5,41 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Projects</title>
     <link rel="stylesheet" href="/src/index.css">
-    <link rel="stylesheet" href="/src/projects.css">
+    <link rel="stylesheet" href="/src/masonry.css">
+    <style>
+      /* Page specific styles */
+      .project-page-container {
+        padding: 120px 5%;
+      }
+      .project-page-container h1 {
+        font-size: 3.5rem;
+        margin-bottom: 50px;
+        color: var(--yellow);
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .back-button {
+        position: absolute;
+        top: 130px;
+        left: 5%;
+        color: var(--white);
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+        z-index: 20;
+      }
+      .back-button:hover {
+          color: var(--red);
+      }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="navbar">
-            <div class="logo">
-                <a href="/#">VINE</a>
-            </div>
-        </nav>
-    </header>
+    <a href="/#" class="back-button">&larr; Back</a>
+    <div class="project-page-container">
+        <h1>Hardware & IoT Projects</h1>
+        <div id="project-grid"></div>
+    </div>
 
-    <main class="project-page">
-        <a href="/#" class="back-button">&larr; Back</a>
-        <h1 data-animate data-animation="fade-in-up">Hardware Projects</h1>
-        <div class="project-grid glass" data-animate data-animation="fade-in-up">
-            <!-- Projects will be added here -->
-            <p>Your hardware projects will be listed here soon.</p>
-        </div>
-    </main>
+    <script type="module">
+        import { Masonry } from '/src/masonry.js';
 
-    <footer class="footer">
-        <p>&copy; 2025 VINE. All Rights Reserved.</p>
-    </footer>
-    <script>
-      // Minimal animation hook for project pages
-      const animatedElements = document.querySelectorAll('[data-animate]');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
+        const items = [
+            { id: "h1", img: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 500 },
+            { id: "h2", img: "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 800 },
+            { id: "h3", img: "https://images.unsplash.com/photo-1504384764586-bb4a5522433f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 600 },
+            { id: "h4", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 900 },
+            { id: "h5", img: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 700 },
+            { id: "h6", img: "https://images.unsplash.com/photo-1526657782461-9fe13505d3a7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 550 },
+            { id: "h7", img: "https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 850 },
+        ];
+
+        const gridContainer = document.getElementById('project-grid');
+        
+        new Masonry(gridContainer, items, {
+            ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            duration: 0.8,
+            stagger: 0.06,
+            animateFrom: 'bottom',
+            blurToFocus: true
         });
-      }, { threshold: 0.1 });
-      animatedElements.forEach(element => observer.observe(element));
     </script>
 </body>
 </html>
