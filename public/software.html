@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Projects</title>
+    <link rel="stylesheet" href="/src/index.css">
+    <link rel="stylesheet" href="/src/projects.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/#">VINE</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="project-page">
+        <a href="/#" class="back-button">&larr; Back</a>
+        <h1 data-animate data-animation="fade-in-up">Software Projects</h1>
+        <div class="project-grid glass" data-animate data-animation="fade-in-up">
+            <!-- Projects will be added here -->
+            <p>Your software projects will be listed here soon.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 VINE. All Rights Reserved.</p>
+    </footer>
+    <script>
+      // Minimal animation hook for project pages
+      const animatedElements = document.querySelectorAll('[data-animate]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      animatedElements.forEach(element => observer.observe(element));
+    </script>
+</body>
+</html>

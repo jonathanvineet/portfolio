@@ -1,0 +1,39 @@
+.project-page {
+    padding: 120px 5% 60px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.project-page h1 {
+    font-size: 3.5rem;
+    margin-bottom: 40px;
+    color: var(--yellow);
+    text-transform: uppercase;
+}
+
+.back-button {
+    position: absolute;
+    top: 130px;
+    left: 5%;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: var(--red);
+}
+
+.project-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.project-grid p {
+    font-size: 1.2rem;
+}
