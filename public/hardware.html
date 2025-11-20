@@ -3,65 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hardware Projects</title>
+    <title>Hardware & IoT Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/index.css">
-    <link rel="stylesheet" href="/src/masonry.css">
-    <style>
-      /* Page specific styles */
-      .project-page-container {
-        padding: 120px 5%;
-      }
-      .project-page-container h1 {
-        font-size: 3.5rem;
-        margin-bottom: 50px;
-        color: var(--yellow);
-        text-transform: uppercase;
-        text-align: center;
-      }
-      .back-button {
-        position: absolute;
-        top: 130px;
-        left: 5%;
-        color: var(--white);
-        text-decoration: none;
-        font-size: 1.2rem;
-        transition: color 0.3s ease;
-        z-index: 20;
-      }
-      .back-button:hover {
-          color: var(--red);
-      }
-    </style>
+    <link rel="stylesheet" href="/src/projects.css">
 </head>
 <body>
-    <a href="/#" class="back-button">&larr; Back</a>
-    <div class="project-page-container">
-        <h1>Hardware & IoT Projects</h1>
-        <div id="project-grid"></div>
-    </div>
+    <canvas id="particles-canvas"></canvas>
+    <div id="root"></div>
 
     <script type="module">
-        import { Masonry } from '/src/masonry.js';
+        import { createProjectsPage, initProjectCards } from '/src/projects.js';
 
-        const items = [
-            { id: "h1", img: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 500 },
-            { id: "h2", img: "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 800 },
-            { id: "h3", img: "https://images.unsplash.com/photo-1504384764586-bb4a5522433f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 600 },
-            { id: "h4", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 900 },
-            { id: "h5", img: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 700 },
-            { id: "h6", img: "https://images.unsplash.com/photo-1526657782461-9fe13505d3a7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 550 },
-            { id: "h7", img: "https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", url: "#", height: 850 },
-        ];
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        const gridContainer = document.getElementById('project-grid');
-        
-        new Masonry(gridContainer, items, {
-            ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
-            duration: 0.8,
-            stagger: 0.06,
-            animateFrom: 'bottom',
-            blurToFocus: true
+        const particles = [];
+        const particleCount = 80;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 0, 51, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.strokeStyle = `rgba(255, 0, 51, ${0.2 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
+
+        const root = document.getElementById('root');
+        root.innerHTML = createProjectsPage('hardware');
+        initProjectCards();
     </script>
 </body>
 </html>
