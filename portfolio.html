@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vineet Jonathan - IoT & Full-Stack Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="portfolio.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="page">
+        <section id="home" class="section hero-section">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-text animate-slide-left">
+                        <h1 class="hero-title">
+                            Hi, I'm <span class="gradient-text">Vineet Jonathan</span>
+                        </h1>
+                        <h2 class="hero-subtitle">IoT Engineer • Web & Mobile Developer</h2>
+                        <p class="hero-description">
+                            I design and build connected experiences — from embedded IoT systems
+                            to full-stack web and phone apps, turning ideas into products you can
+                            touch and use.
+                        </p>
+                        <div class="tech-pills">
+                            <span class="pill">IoT</span>
+                            <span class="pill">Embedded</span>
+                            <span class="pill">React</span>
+                            <span class="pill">Node.js</span>
+                            <span class="pill">Mobile Apps</span>
+                        </div>
+                    </div>
+                    <div class="hero-photo animate-slide-right">
+                        <div class="photo-card">
+                            <div class="photo-placeholder">
+                                <img src="public/profile.png" alt="Vineet Jonathan">
+                            </div>
+                            <div class="tech-icon-bg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section about-section">
+            <div class="container centered">
+                <h2 class="section-title animate-fade-zoom">About Me</h2>
+                <p class="about-text">
+                    I'm passionate about building end-to-end solutions that bridge hardware and software.
+                    From IoT prototypes to responsive web platforms and intuitive mobile apps,
+                    I thrive on solving complex problems with elegant, practical designs.
+                </p>
+                <div class="quote-card animate-slide-up">
+                    <div class="quote-icon">"</div>
+                    <blockquote>
+                        I don't just connect devices — I connect ideas, code, and people
+                        to build things that actually matter.
+                    </blockquote>
+                </div>
+                <div class="info-chips">
+                    <div class="chip">IoT Prototyping</div>
+                    <div class="chip">Full-Stack Development</div>
+                    <div class="chip">Mobile UX</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="work" class="section work-section">
+            <div class="work-grid">
+                <a href="#" class="work-half iot-half animate-slide-left">
+                    <div class="work-overlay"></div>
+                    <div class="work-content">
+                        <h3 class="work-title">IoT Projects</h3>
+                        <p class="work-description">
+                            Drones, sensors, and connected prototypes that bridge the real and digital worlds.
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="work-half software-half animate-slide-right">
+                    <div class="work-overlay"></div>
+                    <div class="work-content">
+                        <h3 class="work-title">Software Projects</h3>
+                        <p class="work-description">
+                            Web platforms and mobile apps crafted with clean code and focused UI/UX.
+                        </p>
+                    </div>
+                </a>
+                <div class="vertical-divider"></div>
+            </div>
+        </section>
+
+        <section id="skills" class="section skills-section">
+            <div class="container">
+                <h2 class="section-title">Skills</h2>
+                <div class="skills-grid">
+                    <div class="skills-column">
+                        <h3 class="column-title">Hardware & IoT</h3>
+                        <div class="skill-item">ESP32</div>
+                        <div class="skill-item">Raspberry Pi</div>
+                        <div class="skill-item">Sensors & Actuators</div>
+                        <div class="skill-item">Drones</div>
+                        <div class="skill-item">Embedded C/C++</div>
+                        <div class="skill-item">Circuit Design</div>
+                        <div class="skill-item">PCB Development</div>
+                        <div class="skill-item">MQTT</div>
+                    </div>
+                    <div class="skills-column">
+                        <h3 class="column-title">Software & Cloud</h3>
+                        <div class="skill-item">React</div>
+                        <div class="skill-item">Node.js</div>
+                        <div class="skill-item">Python</div>
+                        <div class="skill-item">REST APIs</div>
+                        <div class="skill-item">Databases</div>
+                        <div class="skill-item">React Native</div>
+                        <div class="skill-item">AWS / GCP</div>
+                        <div class="skill-item">Docker</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section contact-section">
+            <div class="container centered">
+                <h2 class="section-title">Let's Build Something</h2>
+                <p class="contact-intro">
+                    If you want to collaborate on IoT, web, or mobile, I'd love to hear from you.
+                </p>
+                <div class="contact-block">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span class="icon">📧</span>
+                            <span>your.email@example.com</span>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-icon" aria-label="LinkedIn">💼</a>
+                            <a href="#" class="social-icon" aria-label="GitHub">🐙</a>
+                        </div>
+                    </div>
+                    <form class="contact-form" id="contactForm">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="portfolio.js"></script>
+</body>
+</html>
