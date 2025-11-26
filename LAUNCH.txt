@@ -1,0 +1,84 @@
+================================================
+VINEET JONATHAN PORTFOLIO - LAUNCH INSTRUCTIONS
+================================================
+
+✅ READY TO VIEW!
+
+OPTION 1: Direct Browser Open (Simplest)
+-----------------------------------------
+Double-click index.html to open in your default browser
+
+OR
+
+Right-click index.html → "Open with" → Choose your browser
+
+
+OPTION 2: Local Server (Recommended)
+-------------------------------------
+For best performance and to avoid CORS issues:
+
+Using Python 3:
+  cd /app
+  python3 -m http.server 8000
+  
+Then open: http://localhost:8000
+
+
+Using Python 2:
+  cd /app
+  python -m SimpleHTTPServer 8000
+  
+Then open: http://localhost:8000
+
+
+Using Node.js (with npx):
+  cd /app
+  npx serve
+  
+Follow the URL shown in terminal
+
+
+WHAT TO EXPECT:
+----------------
+✨ 5 full-screen sections with smooth scroll snap
+✨ Animated gradient name with particle effects
+✨ Interactive split-screen Works section
+✨ Circular skill widgets with neon effects
+✨ Glass morphism design throughout
+✨ Fully responsive on all devices
+
+
+CUSTOMIZATION:
+--------------
+📝 See README.md for complete customization guide
+📂 Replace images in /assets/ folder
+🎨 Edit colors in styles.css (CSS variables)
+✏️ Update text content in index.html
+💼 Add projects in script.js
+
+
+KEYBOARD SHORTCUTS:
+-------------------
+↑/↓   - Navigate sections
+Enter - Activate buttons
+Esc   - Close modals
+Tab   - Navigate elements
+
+
+BROWSER SUPPORT:
+----------------
+✅ Chrome/Edge 90+
+✅ Firefox 88+
+✅ Safari 14+
+✅ Opera 76+
+
+
+NEED HELP?
+----------
+Check README.md for detailed documentation
+Check assets/readme.txt for image replacement guide
+
+
+================================================
+              🚀 ENJOY YOUR PORTFOLIO!
+================================================
