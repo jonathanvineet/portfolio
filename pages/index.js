@@ -35,12 +35,12 @@ export default function Home() {
             </div>
 
             <div className="hero-right">
-              <div className="portrait-card" data-reveal="portrait">
+                <div className="portrait-card" data-reveal="portrait">
                 <div className="parallax-ring ring-1"></div>
                 <div className="parallax-ring ring-2"></div>
                 <div className="parallax-ring ring-3"></div>
                 <div className="circuit-overlay" aria-hidden="true"></div>
-                <img src="/assets/photo.svg" alt="Vineet Jonathan portrait" className="portrait-image" />
+                <img src="/assets/0AC2FC8E-39F9-4EAD-9458-2D1B5FECD0DC.jpeg" alt="Vineet Jonathan portrait" className="portrait-image" />
               </div>
             </div>
           </div>
