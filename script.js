@@ -1,15 +1,17 @@
 // ----------------------------
-// PARTICLES
+// PARTICLES (Batman Gold & Red)
 // ----------------------------
 const container = document.getElementById("particles");
 
-for (let i = 0; i < 40; i++) {
-  const p = document.createElement("div");
-  p.className = "particle" + (Math.random() > 0.6 ? " red" : "");
-  p.style.left = Math.random() * 100 + "%";
-  p.style.top = Math.random() * 100 + "%";
-  p.style.animationDuration = 6 + Math.random() * 6 + "s";
-  container.appendChild(p);
+if (container) {
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement("div");
+    p.className = "particle" + (Math.random() > 0.6 ? " red" : "");
+    p.style.left = Math.random() * 100 + "%";
+    p.style.top = Math.random() * 100 + "%";
+    p.style.animationDuration = 6 + Math.random() * 6 + "s";
+    container.appendChild(p);
+  }
 }
 
 

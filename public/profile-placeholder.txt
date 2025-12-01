@@ -1,0 +1,10 @@
+PLACEHOLDER: Add your profile photo here as profile.jpg
+
+Recommended specifications:
+- Format: JPG or PNG
+- Size: 500x500 pixels (square)
+- File size: < 500KB for optimal performance
+- High quality headshot or professional photo
+- Centered composition for circular crop
+
+The Hero component will display this image in a circular frame with pulsing gold and red rings around it.

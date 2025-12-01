@@ -283,7 +283,7 @@ const particleSystem = {
     canvas: null,
     ctx: null,
     particles: [],
-    colors: ['#ffdd00', '#ff2d2d', '#00d9ff'],
+    colors: ['#F0C000', '#AA1A1A'],
     
     init() {
         if (state.reducedMotion) return;
