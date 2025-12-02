@@ -240,14 +240,19 @@ class App {
       textColor = '#ffffff',
       borderRadius = 0,
       font = 'bold 30px Figtree',
-      scrollSpeed = 2,
-      scrollEase = 0.05
+      scrollSpeed = 4,
+      scrollEase = 0.5,
+      autoRotate = true,
+      autoSpeed = 1
     } = {}
   ) {
     document.documentElement.classList.remove('no-js');
     this.container = container;
     this.scrollSpeed = scrollSpeed;
+    this.autoRotate = autoRotate;
+    this.autoSpeed = autoSpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
+    this._lastTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
     this.onCheckDebounce = debounce(this.onCheck, 200);
     this.createRenderer();
     this.createCamera();
@@ -357,7 +362,19 @@ class App {
     }
   }
   update() {
-    this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const dt = (now - (this._lastTime || now)) / 1000; // seconds
+    this._lastTime = now;
+
+    if (this.autoRotate) {
+      // Use time-based constant increment so speed stays steady
+      const delta = this.autoSpeed * dt; // units per second
+      // advance both current and target by same delta to avoid easing effects
+      this.scroll.current += delta;
+      this.scroll.target = this.scroll.current;
+    } else {
+      this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+    }
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
       this.medias.forEach(media => media.update(this.scroll, direction));
@@ -368,33 +385,21 @@ class App {
   }
   addEventListeners() {
     this.boundOnResize = this.onResize.bind(this);
-    this.boundOnWheel = this.onWheel.bind(this);
-    this.boundOnTouchDown = this.onTouchDown.bind(this);
-    this.boundOnTouchMove = this.onTouchMove.bind(this);
-    this.boundOnTouchUp = this.onTouchUp.bind(this);
+    // Only listen to resize when in auto-rotate mode; disable direct user interaction
     window.addEventListener('resize', this.boundOnResize);
-    window.addEventListener('mousewheel', this.boundOnWheel);
-    window.addEventListener('wheel', this.boundOnWheel);
-    window.addEventListener('mousedown', this.boundOnTouchDown);
-    window.addEventListener('mousemove', this.boundOnTouchMove);
-    window.addEventListener('mouseup', this.boundOnTouchUp);
-    window.addEventListener('touchstart', this.boundOnTouchDown);
-    window.addEventListener('touchmove', this.boundOnTouchMove);
-    window.addEventListener('touchend', this.boundOnTouchUp);
   }
   destroy() {
     window.cancelAnimationFrame(this.raf);
     window.removeEventListener('resize', this.boundOnResize);
-    window.removeEventListener('mousewheel', this.boundOnWheel);
-    window.removeEventListener('wheel', this.boundOnWheel);
-    window.removeEventListener('mousedown', this.boundOnTouchDown);
-    window.removeEventListener('mousemove', this.boundOnTouchMove);
-    window.removeEventListener('mouseup', this.boundOnTouchUp);
-    window.removeEventListener('touchstart', this.boundOnTouchDown);
-    window.removeEventListener('touchmove', this.boundOnTouchMove);
-    window.removeEventListener('touchend', this.boundOnTouchUp);
-    if (this.renderer && this.renderer.gl && this.renderer.gl.canvas.parentNode) {
-      this.renderer.gl.canvas.parentNode.removeChild(this.renderer.gl.canvas);
+    try {
+      const canvas = this && this.renderer && this.renderer.gl && this.renderer.gl.canvas;
+      if (canvas && canvas.parentNode && typeof canvas.parentNode.removeChild === 'function') {
+        canvas.parentNode.removeChild(canvas);
+      }
+    } catch (err) {
+      // Swallow cleanup errors to avoid unhandled runtime exceptions during unmount
+      // (sometimes canvas/parent may already be detached by the DOM)
+      console.warn('CircularGallery cleanup error:', err);
     }
   }
 }
@@ -407,13 +412,16 @@ export default function CircularGallery({
   font = 'bold 30px Figtree',
   scrollSpeed = 2,
   scrollEase = 0.05
+  ,
+  autoRotate = true,
+  autoSpeed = 0.6
 }) {
   const containerRef = useRef(null);
   useEffect(() => {
-    const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase });
+    const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, autoRotate, autoSpeed });
     return () => {
       app.destroy();
     };
-  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, autoRotate, autoSpeed]);
   return <div className="circular-gallery" ref={containerRef} />;
 }

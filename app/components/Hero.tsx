@@ -14,7 +14,7 @@ export default function Hero() {
   ]
 
   return (
-    <section id="home" className={`${styles.heroContainer} bg-dark-bg relative overflow-hidden`}>
+    <section className={`${styles.heroContainer} bg-dark-bg relative overflow-hidden`}>
       {/* Floating glow particles */}
       <div className={styles.floatingGlow}></div>
       <div className={styles.floatingGlow}></div>
@@ -22,7 +22,8 @@ export default function Hero() {
       <div className={styles.floatingGlow}></div>
       
       <div className="container mx-auto px-6 h-full flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full items-center">
+        <div className={`${styles.heroGlass} w-full`}> 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full items-center">
           
           {/* Left Side - Profile Info */}
           <div className="space-y-8">
@@ -87,15 +88,11 @@ export default function Hero() {
                 borderRadius={0.0} /* no rounded label boxes */
                 scrollSpeed={2}
                 scrollEase={0.02}
+                autoRotate={true}
+                autoSpeed={1.2}
               />
           </div>
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
-        <div className="w-6 h-10 border-2 border-gold/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-gold rounded-full mt-2"></div>
         </div>
       </div>
     </section>

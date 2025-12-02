@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import styles from '../../styles/Hero.module.css'
 
 export default function About() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,12 +30,19 @@ export default function About() {
 
   return (
     <section 
-      id="about"
       ref={sectionRef}
-      className="min-h-screen flex items-center justify-center bg-dark-bg px-4 py-20"
+      style={{
+        backgroundImage: "url('/assets/wp8017938.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center'
+      }}
+      className="relative min-h-screen flex items-center justify-center bg-transparent px-4 py-20"
     >
+      {/* dark overlay for legibility */}
+      <div className="absolute inset-0 bg-black/55" aria-hidden="true"></div>
+
       <div 
-        className={`glass-panel max-w-4xl p-8 md:p-12 rounded-lg transition-all duration-1000 ${
+        className={`relative z-10 ${styles.heroGlass} max-w-4xl md:p-12 p-8 rounded-lg transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >

@@ -26,7 +26,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="min-h-screen flex flex-col items-center justify-center bg-dark-bg px-4 py-20">
+    <section className="min-h-screen flex flex-col items-center justify-center bg-dark-bg px-4 py-20">
       <h2 className="font-poppins text-gold mb-4 text-center">
         Get In Touch
       </h2>

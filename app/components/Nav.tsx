@@ -1,12 +1,30 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import styles from '../../styles/Nav.module.css'
 
+const LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/contact', label: 'Contact' },
+]
+
 export default function Nav() {
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const navLinksRef = useRef<HTMLDivElement>(null)
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([])
 
+  // Get active index based on current pathname
+  const activeIndex = LINKS.findIndex(link => link.href === pathname)
+
+  // Track scroll for nav background
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
@@ -15,27 +33,53 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const links = [
-    { href: '#home', label: 'About' },
-    { href: '#about', label: 'Blog' },
-    { href: '#works', label: 'Projects' },
-    { href: '#skills', label: 'Photos' },
-  ]
+  // Update indicator position when active index changes
+  useEffect(() => {
+    function updateIndicator() {
+      const activeLink = linkRefs.current[activeIndex]
+      const container = navLinksRef.current
+      if (activeLink && container) {
+        const containerRect = container.getBoundingClientRect()
+        const linkRect = activeLink.getBoundingClientRect()
+        setIndicatorStyle({
+          left: linkRect.left - containerRect.left,
+          width: linkRect.width,
+        })
+      }
+    }
+
+    updateIndicator()
+    window.addEventListener('resize', updateIndicator)
+    return () => window.removeEventListener('resize', updateIndicator)
+  }, [activeIndex])
+
+  const handleLinkClick = () => {
+    setOpen(false)
+  }
 
   return (
     <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.navInner}>
         
         {/* Desktop Links */}
-        <div className={styles.navLinks}>
-          {links.map(link => (
-            <a 
+        <div className={styles.navLinks} ref={navLinksRef}>
+          <span 
+            className={styles.activeIndicator}
+            style={{
+              transform: `translateX(${indicatorStyle.left}px)`,
+              width: `${indicatorStyle.width}px`,
+            }}
+          />
+          {LINKS.map((link, index) => (
+            <Link 
               key={link.href} 
+              ref={el => { linkRefs.current[index] = el; }}
               href={link.href} 
-              className={styles.navLink}
+              className={`${styles.navLink} ${activeIndex === index ? styles.navLinkActive : ''}`}
+              onClick={handleLinkClick}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -61,15 +105,15 @@ export default function Nav() {
 
       {/* Mobile menu */}
       <div className={`${styles.mobileMenu} ${open ? styles.mobileMenuOpen : ''}`}>
-        {links.map(link => (
-          <a 
+        {LINKS.map((link, index) => (
+          <Link 
             key={link.href} 
             href={link.href} 
-            className={styles.mobileLink}
-            onClick={() => setOpen(false)}
+            className={`${styles.mobileLink} ${activeIndex === index ? styles.mobileLinkActive : ''}`}
+            onClick={handleLinkClick}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
       </div>
     </nav>

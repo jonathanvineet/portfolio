@@ -57,7 +57,6 @@ export default function Skills() {
 
   return (
     <section 
-      id="skills"
       ref={sectionRef}
       className="min-h-screen flex flex-col items-center justify-center bg-dark-bg px-4 py-20"
     >

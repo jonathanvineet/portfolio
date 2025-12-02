@@ -50,6 +50,47 @@
   overflow: hidden;
 }
 
+/* Background image for hero (public/assets) with dark overlay for contrast */
+.heroContainer {
+  background-image: url('/assets/full-moon-forest-night-dark-starry-sky-5k-8k-2560x1080-1684.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.heroContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,12,0.55); /* subtle darken for legibility */
+  z-index: 0;
+}
+
+/* Ensure inner content stacks above the overlay */
+.heroContainer > .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Glass card that wraps the hero content */
+.heroGlass {
+  background: rgba(19,19,22,0.01);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(4px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.55);
+  padding: 1.25rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .heroGlass {
+    padding: 2rem;
+    border-radius: 22px;
+  }
+}
+
 /* Quote card */
 .quoteCard {
   background: rgba(19, 19, 22, 0.6) !important;
