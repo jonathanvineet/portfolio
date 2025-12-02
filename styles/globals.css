@@ -34,6 +34,96 @@ section {
   min-height: 100vh;
 }
 
+/* Skills background animated diagonal icon tracks */
+.skills-bg-logoloop {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 160%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+  z-index: 0;
+  overflow: visible;
+}
+
+.skills-bg-logoloop .logoloop__node {
+  transform: rotate(45deg);
+  color: rgba(255,255,255,0.95);
+}
+
+/* Legacy icon track styles - can be removed if not used elsewhere */
+.skills-bg {
+  position: absolute;
+  inset: 0; /* cover the entire section */
+  height: 100%;
+  width: 160%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg); /* diagonal sweep at 45deg */
+  z-index: 0;
+  overflow: visible;
+}
+
+
+
+.icon-track {
+  position: absolute;
+  left: -10%;
+  width: 220%;
+  padding: 0.3rem 0;
+  opacity: 0.25;
+  filter: blur(0.1px) saturate(130%);
+  will-change: transform;
+  top: var(--offsetY, 0%); /* use per-track offset to distribute vertically */
+}
+
+.icon-track .track-inner {
+  display: flex;
+  gap: 1.5rem;
+  width: 300%; /* three copies laid out horizontally */
+  align-items: center;
+}
+
+.icon-track .track-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.icon-item {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.95);
+  flex: 0 0 auto;
+}
+
+/* SVG icons are counter-rotated so they appear straight when the background is tilted */
+.icon-svg { width: 20px; height: 20px; color: rgba(255,255,255,0.95); opacity: 0.95; transform: rotate(45deg); }
+
+/* per-track transforms: use CSS vars set inline for duration and vertical offset */
+.icon-track { transform: translateY(var(--offsetY, 0%)); }
+.icon-track.track-left .track-inner { animation: slide-left var(--duration, 48s) linear infinite; animation-delay: var(--delay, 0s); }
+.icon-track.track-right .track-inner { animation: slide-right var(--duration, 56s) linear infinite; animation-delay: var(--delay, 0s); }
+
+@keyframes slide-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-33.333%); }
+}
+
+@keyframes slide-right {
+  0% { transform: translateX(-33.333%); }
+  100% { transform: translateX(0%); }
+}
+
+/* ensure Skills content is above background */
+.min-h-screen > .max-w-5xl, .min-h-screen > h2 { z-index: 5; position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-track .track-inner { animation: none !important; }
+}
+
 /* Responsive Typography using clamp() */
 h1 {
   font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -53,11 +143,11 @@ p {
 
 /* Glassmorphism base */
 .glass-panel {
-  background: rgba(20, 20, 20, 0.8);
+  background: rgba(20, 20, 20, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(240, 192, 0, 0.2);
-  box-shadow: 0 0 10px rgba(240, 192, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
 }
 
 /* Floating particles background effect */
@@ -101,10 +191,10 @@ button, a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #F0C000;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #AA1A1A;
+  background: rgba(255, 255, 255, 0.3);
 }

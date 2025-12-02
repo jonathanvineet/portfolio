@@ -9,9 +9,11 @@ export default function Works() {
   return (
     <section className={styles.worksContainer}>
       <div className={styles.titleContainer}>
-        <h2 className="font-poppins text-gold">
-          PROJECTS
-        </h2>
+        <div className={styles.titleGlass}>
+          <h2 className="font-poppins text-white">
+            PROJECTS
+          </h2>
+        </div>
       </div>
 
       <div className={styles.splitContainer}>
