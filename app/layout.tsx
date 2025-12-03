@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import type { Metadata } from 'next'
 import Nav from './components/Nav'
+import PageLoader from './components/PageLoader'
 
 export const metadata: Metadata = {
   title: 'Portfolio | Wayne Enterprises Style',
@@ -14,9 +15,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <style dangerouslySetInnerHTML={{__html: `
+          body { 
+            overflow: hidden;
+          }
+          .page-content {
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+          }
+          .page-content.loaded {
+            opacity: 1;
+          }
+        `}} />
+      </head>
       <body>
-        <Nav />
-        {children}
+        <PageLoader />
+        <div className="page-content loaded">
+          <Nav />
+          {children}
+        </div>
       </body>
     </html>
   )

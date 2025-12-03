@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 // @ts-ignore - allow importing CSS files without type declarations
 import './LogoLoop.css';
 
-const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 4, COPY_HEADROOM: 3 };
+const ANIMATION_CONFIG = { SMOOTH_TAU: 0.4, MIN_COPIES: 3, COPY_HEADROOM: 2 };
 
 const toCssLength = (value: any) => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
 
@@ -77,14 +77,6 @@ const useAnimationLoop = (
 
     const seqSize = isVertical ? seqHeight : seqWidth;
 
-    if (seqSize > 0) {
-      offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
-      const transformValue = isVertical
-        ? `translate3d(0, ${-offsetRef.current}px, 0)`
-        : `translate3d(${-offsetRef.current}px, 0, 0)`;
-      track.style.transform = transformValue;
-    }
-
     const animate = (timestamp: number) => {
       if (lastTimestampRef.current === null) {
         lastTimestampRef.current = timestamp;
@@ -99,9 +91,16 @@ const useAnimationLoop = (
       velocityRef.current += (target - velocityRef.current) * easingFactor;
 
       if (seqSize > 0) {
-        let nextOffset = offsetRef.current + velocityRef.current * deltaTime;
-        nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
-        offsetRef.current = nextOffset;
+        // Continuously increment offset without wrapping
+        offsetRef.current += velocityRef.current * deltaTime;
+        
+        // Seamlessly wrap when we've scrolled past one full sequence
+        // This creates the infinite loop illusion
+        if (offsetRef.current >= seqSize) {
+          offsetRef.current -= seqSize;
+        } else if (offsetRef.current < 0) {
+          offsetRef.current += seqSize;
+        }
 
         const transformValue = isVertical
           ? `translate3d(0, ${-offsetRef.current}px, 0)`

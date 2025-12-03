@@ -169,38 +169,44 @@ export default function Skills() {
       ref={sectionRef}
       className="min-h-screen relative bg-dark-bg"
     >
-      {/* Fixed animated diagonal logo background */}
+      {/* Fixed animated diagonal logo background (denser, programmatic offsets) */}
       <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
-        {Array.from({ length: 30 }).map((_, trackIdx) => {
-          const direction = trackIdx % 2 === 0 ? 'left' : 'right'
-          const speed = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 75, 115, 88, 145, 82, 108, 122, 102, 92, 128, 85, 112, 96, 124, 86, 138, 78, 106][trackIdx % 30]
-          const offsetY = [-120,-112,-104,-96,-88,-80,-72,-64,-56,-48,-40,-32,-24,-16,-8,0,8,16,24,32,40,48,56,64,72,80,88,96,104,112][trackIdx % 30]
-          
-          return (
-            <div
-              key={`logoloop-${trackIdx}`}
-              style={{
-                position: 'absolute',
-                top: `${offsetY}%`,
-                left: 0,
-                width: '100%',
-                opacity: 0.2,
-                overflow: 'hidden'
-              }}
-            >
-              <LogoLoop
-                logos={techLogos}
-                speed={speed}
-                direction={direction}
-                logoHeight={20}
-                gap={24}
-                hoverSpeed={speed}
-                fadeOut={false}
-                ariaLabel={`Tech logos row ${trackIdx + 1}`}
-              />
-            </div>
-          )
-        })}
+        {(() => {
+          const totalTracks = 35 // optimized number of rows to fill screen with larger logos
+          const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 75, 115, 88, 145, 82, 108, 122, 102, 92, 128, 85, 112, 96, 124, 86, 138, 78, 106]
+
+          return Array.from({ length: totalTracks }).map((_, trackIdx) => {
+            const direction = trackIdx % 2 === 0 ? 'left' : 'right'
+            const speed = speedVariants[trackIdx % speedVariants.length]
+            // span offsets smoothly from -140% down to +140% so rows cover entire height (and a bit beyond)
+            const offsetY = Math.round(-140 + (trackIdx / (totalTracks - 1)) * 280)
+
+            return (
+              <div
+                key={`logoloop-${trackIdx}`}
+                style={{
+                  position: 'absolute',
+                  top: `${offsetY}%`,
+                  left: 0,
+                  width: '100%',
+                  opacity: 0.18,
+                  overflow: 'hidden',
+                }}
+              >
+                <LogoLoop
+                  logos={techLogos}
+                  speed={speed}
+                  direction={direction}
+                  logoHeight={36}
+                  gap={40}
+                  hoverSpeed={speed}
+                  fadeOut={false}
+                  ariaLabel={`Tech logos row ${trackIdx + 1}`}
+                />
+              </div>
+            )
+          })
+        })()}
       </div>
 
       {/* Fixed glass panel background - independent layer */}
