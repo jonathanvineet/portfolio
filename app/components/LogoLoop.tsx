@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
+// @ts-ignore - allow importing CSS files without type declarations
 import './LogoLoop.css';
 
-const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 };
+const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 4, COPY_HEADROOM: 3 };
 
 const toCssLength = (value: any) => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
 

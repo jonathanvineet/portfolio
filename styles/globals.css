@@ -36,14 +36,15 @@ section {
 
 /* Skills background animated diagonal icon tracks */
 .skills-bg-logoloop {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  height: 100%;
+  height: 100vh;
   width: 160%;
   left: 50%;
   transform: translateX(-50%) rotate(-45deg);
   z-index: 0;
   overflow: visible;
+  pointer-events: none;
 }
 
 .skills-bg-logoloop .logoloop__node {
@@ -198,3 +199,127 @@ button, a {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Universal Loader Styles */
+.loader-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0A0C;
+  z-index: 9999;
+}
+
+.loader {
+  width: 80px;
+  height: 80px;
+  background: #353535;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotationBack 1s ease-in-out infinite reverse;
+}
+
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  left: 0;
+  top: 0;
+  transform: rotate(45deg);
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: #2e2e2e;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgb(0, 0, 0);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+.loader-logo {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  filter: brightness(0) invert(1);
+  object-fit: contain;
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Tech stack chip styles (icon left, label right) */
+
+.tech-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(4px);
+}
+
+.tech-chip .chip-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  color: rgba(255,255,255,0.95);
+}
+
+.tech-chip .chip-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tech-chip:hover { transform: translateY(-4px) scale(1.02); }
+
+@media (max-width: 640px) {
+  .tech-chip { gap: 0.5rem; padding: 0.5rem; }
+  .tech-chip .chip-icon { width: 36px; height: 36px; }
+}
+
+/* Category headings and chips-row */
+.skill-category {
+  margin-bottom: 0.5rem;
+}
+
+.skill-category h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255,255,255,0.95);
+  font-size: 1.05rem;
+}
+
+.chips-row { gap: 0.6rem; }
+
+.category-emoji { font-size: 1.1rem }
