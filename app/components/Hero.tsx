@@ -7,7 +7,7 @@ import CircularGallery from './CircularGallery'
 
 export default function Hero() {
   const galleryItems = [
-    { image: '/assets/0AC2FC8E-39F9-4EAD-9458-2D1B5FECD0DC.jpeg', text: 'Adventure' },
+    { image: '/assets/IMG_4654.jpeg', text: 'Adventure' },
     { image: 'https://picsum.photos/seed/2/800/600', text: 'Tech Life' },
     { image: 'https://picsum.photos/seed/3/800/600', text: 'Events' },
     { image: 'https://picsum.photos/seed/4/800/600', text: 'Moments' },
@@ -84,7 +84,7 @@ export default function Hero() {
             {/* Profile Image with rings */}
             <div className={styles.profileContainer}>
               <img 
-                src="/assets/0AC2FC8E-39F9-4EAD-9458-2D1B5FECD0DC.jpeg" 
+                src="/assets/IMG_4654.jpeg" 
                 alt="Profile" 
                 className={styles.profileImage}
               />

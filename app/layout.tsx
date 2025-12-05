@@ -15,23 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <style dangerouslySetInnerHTML={{__html: `
-          body { 
-            overflow: hidden;
-          }
-          .page-content {
-            opacity: 0;
-            transition: opacity 0.3s ease-in;
-          }
-          .page-content.loaded {
-            opacity: 1;
-          }
-        `}} />
-      </head>
+      <head />
       <body>
         <PageLoader />
-        <div className="page-content loaded">
+        <div className="page-content">
           <Nav />
           {children}
         </div>

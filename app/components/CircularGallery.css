@@ -3,6 +3,8 @@
   height: 100%;
   overflow: hidden;
   cursor: grab;
+  position: relative;
+  z-index: 30; /* ensure canvas is above fixed background portal layers */
 }
 
 .circular-gallery:active {
