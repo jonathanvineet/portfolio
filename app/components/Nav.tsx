@@ -8,6 +8,7 @@ import styles from '../../styles/Nav.module.css'
 const LINKS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/vinee', label: 'Vinee' },
   { href: '/projects', label: 'Projects' },
   { href: '/skills', label: 'Skills' },
   { href: '/contact', label: 'Contact' },

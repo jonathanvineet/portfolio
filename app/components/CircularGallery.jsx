@@ -125,14 +125,22 @@ class Media {
         }
         
         void main() {
-          vec2 ratio = vec2(
-            min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-            min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-          );
-          vec2 uv = vec2(
-            vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-            vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
-          );
+          // CSS object-fit: cover - fill the plane while maintaining aspect ratio
+          float imageAspect = uImageSizes.x / uImageSizes.y;
+          float planeAspect = uPlaneSizes.x / uPlaneSizes.y;
+          
+          vec2 uv = vUv;
+          
+          if (imageAspect > planeAspect) {
+            // Image is wider: scale to fit height, crop width
+            float scale = planeAspect / imageAspect;
+            uv.x = (vUv.x - 0.5) * scale + 0.5;
+          } else {
+            // Image is taller: scale to fit width, crop height
+            float scale = imageAspect / planeAspect;
+            uv.y = (vUv.y - 0.5) * scale + 0.5;
+          }
+          
           vec4 color = texture2D(tMap, uv);
           
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
@@ -222,10 +230,16 @@ class Media {
       }
     }
     this.scale = this.screen.height / 1500;
-    this.plane.scale.y = (this.viewport.height * (900 * this.scale)) / this.screen.height;
-    this.plane.scale.x = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+    
+    // Fixed dimensions with proper aspect ratio - images will cover screen edge-to-edge
+    // Using 16:9 landscape ratio for clean, undistorted display
+    const baseWidth = 1200;
+    const baseHeight = 675;  // 16:9 ratio (1200/675 = 1.78)
+    
+    this.plane.scale.y = (this.viewport.height * (baseHeight * this.scale)) / this.screen.height;
+    this.plane.scale.x = (this.viewport.width * (baseWidth * this.scale)) / this.screen.width;
     this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
-    this.padding = 2;
+    this.padding = 1;
     this.width = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x = this.width * this.index;

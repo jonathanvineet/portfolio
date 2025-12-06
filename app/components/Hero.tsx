@@ -4,18 +4,86 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styles from '../../styles/Hero.module.css'
 import CircularGallery from './CircularGallery'
+import { supabase } from '../lib/supabaseClient'
 
 export default function Hero() {
-  const galleryItems = [
-    { image: '/assets/IMG_4654.jpeg', text: 'Adventure' },
-    { image: 'https://picsum.photos/seed/2/800/600', text: 'Tech Life' },
-    { image: 'https://picsum.photos/seed/3/800/600', text: 'Events' },
-    { image: 'https://picsum.photos/seed/4/800/600', text: 'Moments' },
-    { image: 'https://picsum.photos/seed/5/800/600', text: 'Journey' },
-    { image: 'https://picsum.photos/seed/6/800/600', text: 'Innovation' },
-  ]
-
+  const [galleryItems, setGalleryItems] = useState<{ image: string; text: string }[]>([])
   const [mounted, setMounted] = useState(false)
+
+  // Fetch gallery images from Supabase (if configured). If Supabase is not
+  // available (missing NEXT_PUBLIC_SUPABASE_KEY), fall back to static images
+  // bundled with the site so the Hero still renders during development.
+  useEffect(() => {
+    const staticFallback = [
+      { image: '/assets/IMG_4654.jpeg', text: 'Adventure' },
+      { image: '/assets/IMG_4654.jpeg', text: 'Tech Life' },
+      { image: '/assets/IMG_4654.jpeg', text: 'Moments' },
+    ]
+
+    if (!supabase) {
+      // Supabase not configured — use fallback images
+      // eslint-disable-next-line no-console
+      console.warn('Supabase client not available; using static gallery fallback.')
+      setGalleryItems(staticFallback)
+      return
+    }
+
+    const fetchImages = async () => {
+      try {
+        const client = supabase
+        if (!client) {
+          console.warn('Supabase client not available; using static gallery fallback.')
+          setGalleryItems(staticFallback)
+          return
+        }
+
+        console.log('Fetching images from Supabase herogallery bucket...')
+        const { data, error } = await client.storage
+          .from('herogallery')
+          .list('', {
+            limit: 100,
+            sortBy: { column: 'created_at', order: 'desc' },
+          })
+
+        if (error) {
+          console.error('Error loading images from Supabase:', error)
+          setGalleryItems(staticFallback)
+          return
+        }
+
+        console.log(`Supabase returned ${data?.length || 0} images`)
+
+        if (!data || data.length === 0) {
+          console.warn('No images found in Supabase bucket — using fallback')
+          setGalleryItems(staticFallback)
+          return
+        }
+
+        const urls = await Promise.all(
+          data.map(async (item) => {
+            const { data: urlData } = client.storage
+              .from('herogallery')
+              .getPublicUrl(item.name)
+
+            console.log(`Generated public URL for ${item.name}:`, urlData.publicUrl)
+
+            return {
+              image: urlData.publicUrl,
+              text: item.name.split('.')[0], // Use filename as label
+            }
+          })
+        )
+
+        console.log(`Gallery loaded with ${urls.length} images`)
+        setGalleryItems(urls)
+      } catch (err) {
+        console.error('Unexpected error fetching images:', err)
+        setGalleryItems(staticFallback)
+      }
+    }
+
+    fetchImages()
+  }, [])
 
   useEffect(() => {
     setMounted(true)
@@ -121,8 +189,8 @@ export default function Hero() {
               </a>
             </div>
             
-            {/* Circular Gallery */}
-            <div className="relative w-full h-[600px]">
+            {/* Circular Gallery - Full Screen Width */}
+            <div className="relative w-screen h-[600px] -mx-6">
               <CircularGallery
                 items={galleryItems}
                 bend={0}
