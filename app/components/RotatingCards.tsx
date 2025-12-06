@@ -8,13 +8,14 @@ interface RotatingCardsProps {
 
 
 export default function RotatingCards({ photos }: RotatingCardsProps) {
-  // Use the number of photos as quantity, or default to 10
-  const quantity = photos.length || 10
-  
-  // Repeat photos if fewer than 10 to fill all cards
-  const filledPhotos = Array(quantity)
-    .fill(null)
-    .map((_, i) => photos[i % photos.length] || photos[0])
+  // Ensure we have a safe photos array (fallback to local image)
+  const safePhotos = photos && photos.length > 0 ? photos : ['/assets/IMG_6508.jpeg']
+
+  // Use the number of safe photos as quantity (at least 3 to look good)
+  const quantity = Math.max(safePhotos.length, 3)
+
+  // Repeat photos to fill slots
+  const filledPhotos = Array.from({ length: quantity }, (_, i) => safePhotos[i % safePhotos.length])
 
   return (
     <div className={styles.wrapper}>

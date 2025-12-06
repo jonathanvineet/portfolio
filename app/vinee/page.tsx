@@ -6,9 +6,11 @@ import Link from 'next/link'
 import heroStyles from '../../styles/Hero.module.css'
 import RotatingCards from '../components/RotatingCards'
 import styles from '../../styles/VineeButton.module.css'
+import { supabase } from '../lib/supabaseClient'
 
 export default function VineePage() {
   const [mounted, setMounted] = useState(false)
+  const [photos, setPhotos] = useState<string[]>(['/assets/IMG_6508.jpeg'])
   useEffect(() => {
     setMounted(true)
     return () => setMounted(false)
@@ -36,6 +38,55 @@ export default function VineePage() {
     </div>
   )
 
+  // Fetch images from Supabase `vinee` bucket when available (client-side only)
+  useEffect(() => {
+    let mounted = true
+    const staticFallback = ['/assets/IMG_6508.jpeg']
+
+    const fetchPhotos = async () => {
+      if (!supabase) {
+        // Supabase not configured — keep fallback
+        // eslint-disable-next-line no-console
+        console.warn('Supabase client not available in Vinee page; using fallback photos')
+        return
+      }
+
+      try {
+        const { data, error } = await supabase.storage
+          .from('vinee')
+          .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } })
+
+        if (error) {
+          console.error('Error listing vinee bucket:', error)
+          return
+        }
+
+        if (!data || data.length === 0) {
+          console.warn('No files in vinee bucket, using fallback')
+          return
+        }
+
+        const urls = await Promise.all(
+          data.map(async (item) => {
+            if (!supabase) return ''
+            const { data: urlData } = supabase.storage.from('vinee').getPublicUrl(item.name)
+            return urlData.publicUrl
+          })
+        )
+
+        if (mounted && urls && urls.length > 0) setPhotos(urls)
+      } catch (err) {
+        console.error('Failed fetching vinee images:', err)
+      }
+    }
+
+    fetchPhotos()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   return (
     <section
       className={heroStyles.heroContainer + ' bg-fixed relative'}
@@ -51,9 +102,10 @@ export default function VineePage() {
         </div>
 
         {/* Profile image - Rotating Cards */}
-        <div className="flex justify-center mb-20 h-96">
-          <RotatingCards photos={['/assets/IMG_6508.jpeg']} />
-        </div>
+          <div className="flex justify-center mb-20 h-96">
+            {/* Rotating cards will fetch from Supabase `vinee` bucket when available */}
+            <RotatingCards photos={photos} />
+          </div>
 
         {/* Three interest paragraphs - stacked full width */}
         <div className="w-full max-w-4xl mx-auto space-y-16">
