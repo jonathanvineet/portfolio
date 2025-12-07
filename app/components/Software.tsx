@@ -4,9 +4,24 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styles from '../../styles/Hero.module.css'
 import ProjectCard from './ProjectCard'
+import { supabase } from '../lib/supabaseClient'
+
+interface Project {
+  id: string
+  title: string
+  description: string
+  image_name: string
+  github_url: string | null
+  demo_url: string | null
+  twitter_url: string | null
+  type: string
+  created_at: string
+}
 
 export default function Software() {
   const [mounted, setMounted] = useState(false)
+  const [softwareProjects, setSoftwareProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
@@ -26,6 +41,33 @@ export default function Software() {
     }
   }, [])
 
+  useEffect(() => {
+    async function fetchProjects() {
+      if (!supabase) {
+        console.error('Supabase client not initialized')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('type', 'software')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        setSoftwareProjects(data || [])
+      } catch (error) {
+        console.error('Error fetching software projects:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [])
+
   const portalRoot = typeof window !== 'undefined' ? document.getElementById('hero-bg-portal') : null
 
   const fixedBackgrounds = (
@@ -39,14 +81,11 @@ export default function Software() {
     </>
   )
 
-  const softwareProjects = [
-    { title: 'AI-Powered Chat', description: 'Real-time chat application with AI-driven responses and sentiment analysis', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: 'Web3 DApp', description: 'Decentralized application for NFT marketplace with smart contracts', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-    { title: 'Cloud Platform', description: 'Full-stack cloud infrastructure management dashboard with analytics', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: 'ML Analytics', description: 'Machine learning pipeline for data analytics and predictive modeling', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-    { title: 'API Gateway', description: 'Scalable microservices API gateway with load balancing and caching', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: 'DevOps Suite', description: 'CI/CD automation tools with Docker and Kubernetes orchestration', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-  ]
+  const getImageUrl = (imageName: string) => {
+    if (!supabase) return '/assets/iot.svg'
+    const { data } = supabase.storage.from('projects').getPublicUrl(imageName)
+    return data.publicUrl
+  }
 
   return (
     <section
@@ -74,9 +113,25 @@ export default function Software() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 xl:gap-10 w-full justify-items-center">
-              {softwareProjects.map((project, index) => (
-                <ProjectCard key={index} title={project.title} description={project.description} imageUrl={project.imageUrl} links={project.links} />
-              ))}
+              {loading ? (
+                <div className="col-span-full text-center text-gray-400">Loading projects...</div>
+              ) : softwareProjects.length === 0 ? (
+                <div className="col-span-full text-center text-gray-400">No software projects found.</div>
+              ) : (
+                softwareProjects.map((project) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    title={project.title} 
+                    description={project.description || ''} 
+                    imageUrl={getImageUrl(project.image_name)} 
+                    links={{ 
+                      github: project.github_url || undefined, 
+                      demo: project.demo_url || undefined, 
+                      twitter: project.twitter_url || undefined 
+                    }} 
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

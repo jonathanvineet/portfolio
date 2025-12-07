@@ -4,9 +4,24 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styles from '../../styles/Hero.module.css'
 import ProjectCard from './ProjectCard'
+import { supabase } from '../lib/supabaseClient'
+
+interface Project {
+  id: string
+  title: string
+  description: string
+  image_name: string
+  github_url: string | null
+  demo_url: string | null
+  twitter_url: string | null
+  type: string
+  created_at: string
+}
 
 export default function Hardware() {
   const [mounted, setMounted] = useState(false)
+  const [hardwareProjects, setHardwareProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
@@ -26,6 +41,33 @@ export default function Hardware() {
     }
   }, [])
 
+  useEffect(() => {
+    async function fetchProjects() {
+      if (!supabase) {
+        console.error('Supabase client not initialized')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('type', 'hardware')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        setHardwareProjects(data || [])
+      } catch (error) {
+        console.error('Error fetching hardware projects:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [])
+
   const portalRoot = typeof window !== 'undefined' ? document.getElementById('hero-bg-portal') : null
 
   const fixedBackgrounds = (
@@ -39,14 +81,11 @@ export default function Hardware() {
     </>
   )
 
-  const hardwareProjects = [
-    { title: 'Autonomous Drone', description: 'Self-navigating drone with computer vision and obstacle avoidance', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: 'IoT Smart Home', description: 'Integrated home automation system with ESP32 and sensors', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-    { title: 'Robotics Arm', description: 'Precision 6-axis robotic arm with inverse kinematics control', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: 'Weather Station', description: 'Arduino-based weather monitoring with cloud data logging', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-    { title: 'RFID Access', description: 'Secure access control system with biometric authentication', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#', twitter: 'https://x.com/jonathan_vineet' } },
-    { title: '3D Printer', description: 'Custom-built FDM 3D printer with auto-bed leveling', imageUrl: '/assets/iot.svg', links: { github: 'https://github.com/jonathanvineet', demo: '#' } },
-  ]
+  const getImageUrl = (imageName: string) => {
+    if (!supabase) return '/assets/iot.svg'
+    const { data } = supabase.storage.from('projects').getPublicUrl(imageName)
+    return data.publicUrl
+  }
 
   return (
     <section
@@ -74,9 +113,25 @@ export default function Hardware() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 xl:gap-10 w-full justify-items-center">
-              {hardwareProjects.map((project, index) => (
-                <ProjectCard key={index} title={project.title} description={project.description} imageUrl={project.imageUrl} links={project.links} />
-              ))}
+              {loading ? (
+                <div className="col-span-full text-center text-gray-400">Loading projects...</div>
+              ) : hardwareProjects.length === 0 ? (
+                <div className="col-span-full text-center text-gray-400">No hardware projects found.</div>
+              ) : (
+                hardwareProjects.map((project) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    title={project.title} 
+                    description={project.description || ''} 
+                    imageUrl={getImageUrl(project.image_name)} 
+                    links={{ 
+                      github: project.github_url || undefined, 
+                      demo: project.demo_url || undefined, 
+                      twitter: project.twitter_url || undefined 
+                    }} 
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
