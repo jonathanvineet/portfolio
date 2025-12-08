@@ -1,8 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import LogoLoop from './LogoLoop'
+import { useEffect, useRef, useState, useMemo, memo } from 'react'
+import dynamic from 'next/dynamic'
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiPython, SiDocker, SiAmazon, SiGithub, SiGraphql, SiPostgresql, SiMongodb, SiGit, SiJavascript, SiHtml5, SiCss3, SiVite, SiMysql, SiFirebase, SiEthereum, SiSolana, SiOpenai, SiOpencv, SiArduino, SiRaspberrypi } from 'react-icons/si'
+
+// Lazy load LogoLoop component to reduce initial bundle size
+const LogoLoop = dynamic(() => import('./LogoLoop'), {
+  ssr: false,
+  loading: () => null
+})
 
 const skills = [
   // Core Languages
@@ -67,11 +73,12 @@ const skills = [
 
 export default function Skills() {
   const [visibleSkills, setVisibleSkills] = useState<boolean[]>(new Array(skills.length).fill(false))
+  const [showLogoLoops, setShowLogoLoops] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const skillRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  // Tech logos for background animation
-  const techLogos = [
+  // Tech logos for background animation - memoized to prevent recreation on re-renders
+  const techLogos = useMemo(() => [
     { node: <SiReact />, title: "React" },
     { node: <SiNextdotjs />, title: "Next.js" },
     { node: <SiTypescript />, title: "TypeScript" },
@@ -85,10 +92,10 @@ export default function Skills() {
     { node: <SiPostgresql />, title: "PostgreSQL" },
     { node: <SiMongodb />, title: "MongoDB" },
     { node: <SiGit />, title: "Git" },
-  ]
+  ], [])
 
-  // Map skill names to icons for the tech-stack chips
-  const skillIconMap: Record<string, JSX.Element> = {
+  // Map skill names to icons for the tech-stack chips - memoized
+  const skillIconMap: Record<string, JSX.Element> = useMemo(() => ({
     'React': <SiReact />,
     'Next.js': <SiNextdotjs />,
     'TypeScript': <SiTypescript />,
@@ -117,7 +124,13 @@ export default function Skills() {
     'Solidity': <SiEthereum />,
     'CI/CD': <SiGithub />,
     'Monitoring': <SiGithub />,
-  }
+  }), [])
+
+  useEffect(() => {
+    // Delay showing logo loops to improve initial render performance
+    const timer = setTimeout(() => setShowLogoLoops(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     // Use a single observer on the section: when the Skills section becomes
@@ -170,34 +183,35 @@ export default function Skills() {
       className="min-h-screen relative bg-dark-bg"
     >
       {/* Fixed animated diagonal logo background (denser, programmatic offsets) */}
-      <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
-        {(() => {
-          const totalTracks = 35 // optimized number of rows to fill screen with larger logos
-          const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 75, 115, 88, 145, 82, 108, 122, 102, 92, 128, 85, 112, 96, 124, 86, 138, 78, 106]
+      {showLogoLoops && (
+        <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
+          {(() => {
+            const totalTracks = 20 // Reduced from 35 to 20 for better performance
+            const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 75, 115, 88, 145, 82, 108, 122, 102]
 
-          return Array.from({ length: totalTracks }).map((_, trackIdx) => {
-            const direction = trackIdx % 2 === 0 ? 'left' : 'right'
-            const speed = speedVariants[trackIdx % speedVariants.length]
-            // span offsets smoothly from -140% down to +140% so rows cover entire height (and a bit beyond)
-            const offsetY = Math.round(-140 + (trackIdx / (totalTracks - 1)) * 280)
+            return Array.from({ length: totalTracks }).map((_, trackIdx) => {
+              const direction = trackIdx % 2 === 0 ? 'left' : 'right'
+              const speed = speedVariants[trackIdx % speedVariants.length]
+              // span offsets smoothly from -140% down to +140% so rows cover entire height (and a bit beyond)
+              const offsetY = Math.round(-140 + (trackIdx / (totalTracks - 1)) * 280)
 
-            return (
-              <div
-                key={`logoloop-${trackIdx}`}
-                style={{
-                  position: 'absolute',
-                  top: `${offsetY}%`,
-                  left: 0,
-                  width: '100%',
-                  opacity: 0.18,
-                  overflow: 'hidden',
-                }}
-              >
-                <LogoLoop
-                  logos={techLogos}
-                  speed={speed}
-                  direction={direction}
-                  logoHeight={36}
+              return (
+                <div
+                  key={`logoloop-${trackIdx}`}
+                  style={{
+                    position: 'absolute',
+                    top: `${offsetY}%`,
+                    left: 0,
+                    width: '100%',
+                    opacity: 0.18,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <LogoLoop
+                    logos={techLogos}
+                    speed={speed}
+                    direction={direction}
+                    logoHeight={36}
                   gap={40}
                   hoverSpeed={speed}
                   fadeOut={false}
@@ -208,6 +222,7 @@ export default function Skills() {
           })
         })()}
       </div>
+      )}
 
       {/* Fixed glass panel background - independent layer */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none px-4 w-full flex justify-center" style={{ zIndex: 1 }}>
@@ -230,7 +245,7 @@ export default function Skills() {
               </h3>
 
               <div className="chips-row flex flex-wrap gap-3">
-                {items.map((skill, idx) => {
+                {items.map((skill) => {
                   const index = skills.findIndex(s => s.name === skill.name)
                   const IconNode = skillIconMap[skill.name] ?? <SiGithub />
 
@@ -238,7 +253,10 @@ export default function Skills() {
                     <div
                       key={skill.name}
                       ref={el => { skillRefs.current[index] = el }}
-                      style={{ transitionDelay: `${index * 40}ms` }}
+                      style={{ 
+                        transitionDelay: `${index * 30}ms`, // Reduced from 40ms to 30ms for faster reveal
+                        willChange: visibleSkills[index] ? 'auto' : 'transform, opacity'
+                      }}
                       className={`tech-chip flex items-center gap-3 p-3 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] cursor-pointer transition-all duration-500 transform ${
                         visibleSkills[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                       } hover:scale-105 hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)]`}

@@ -2,7 +2,7 @@ import Skills from '../components/Skills'
 
 export default function SkillsPage() {
   return (
-    <main>
+    <main className="min-h-screen">
       <Skills />
     </main>
   )
