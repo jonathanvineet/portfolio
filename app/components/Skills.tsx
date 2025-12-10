@@ -128,7 +128,7 @@ export default function Skills() {
 
   useEffect(() => {
     // Delay showing logo loops to improve initial render performance
-    const timer = setTimeout(() => setShowLogoLoops(true), 100)
+    const timer = setTimeout(() => setShowLogoLoops(true), 300) // Increased delay slightly
     return () => clearTimeout(timer)
   }, [])
 
@@ -186,8 +186,8 @@ export default function Skills() {
       {showLogoLoops && (
         <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
           {(() => {
-            const totalTracks = 20 // Reduced from 35 to 20 for better performance
-            const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 75, 115, 88, 145, 82, 108, 122, 102]
+            const totalTracks = 12 // Further reduced from 20 to 12 for faster compilation
+            const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135]
 
             return Array.from({ length: totalTracks }).map((_, trackIdx) => {
               const direction = trackIdx % 2 === 0 ? 'left' : 'right'
@@ -203,7 +203,7 @@ export default function Skills() {
                     top: `${offsetY}%`,
                     left: 0,
                     width: '100%',
-                    opacity: 0.18,
+                    opacity: 0.15,
                     overflow: 'hidden',
                   }}
                 >
@@ -211,7 +211,7 @@ export default function Skills() {
                     logos={techLogos}
                     speed={speed}
                     direction={direction}
-                    logoHeight={36}
+                    logoHeight={32}
                   gap={40}
                   hoverSpeed={speed}
                   fadeOut={false}

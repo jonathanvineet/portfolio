@@ -64,7 +64,7 @@ export default function Poetry() {
   }
 
   return (
-    <main className="min-h-screen bg-dark-bg py-16 px-6">
+    <main className="min-h-screen bg-dark-bg pt-28 pb-16 px-6">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-12">
           <h1 className="font-poppins text-gold text-5xl mb-4">Poetry</h1>

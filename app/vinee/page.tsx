@@ -110,22 +110,6 @@ export default function VineePage() {
         {/* Three interest paragraphs - stacked full width */}
         <div className="w-full max-w-4xl mx-auto space-y-16">
           <div className="glass-panel rounded-2xl p-8 border border-white/10">
-            <h2 className="text-white font-semibold text-2xl mb-4">Luke</h2>
-            <p className="text-gray-200 text-base leading-7">
-              I love animals for their unwavering loyalty, quiet companionship, and the pure joy they bring. 
-              Their presence reminds me of kindness without words and empathy without conditions. Every creature has its own story. 
-              Dogs, in particular, have a special place in my heart. Their boundless energy and unconditional love make every day brighter.
-            </p>
-            <div className="mt-6 flex justify-center">
-              <Link href="/vinee/animals">
-                <button className={styles.button}>
-                  <span>See more</span>
-                </button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="glass-panel rounded-2xl p-8 border border-white/10">
             <h2 className="text-white font-semibold text-2xl mb-4">Loyals</h2>
             <p className="text-gray-200 text-base leading-7">
               Poetry lets me distill feelings into rhythm and imagery. 
