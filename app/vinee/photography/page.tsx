@@ -127,9 +127,9 @@ export default function Photography() {
             Capturing moments through the lens
           </p>
           <div className="mt-6 flex items-center justify-center gap-2">
-            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-gold to-blood-red"></div>
+            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-gold to-blood-red rounded-full"></div>
             <span className="font-inter text-sm text-gray-500">Gallery</span>
-            <div className="w-20 h-0.5 bg-gradient-to-r from-blood-red via-gold to-transparent"></div>
+            <div className="w-20 h-0.5 bg-gradient-to-r from-blood-red via-gold to-transparent rounded-full"></div>
           </div>
         </div>
 

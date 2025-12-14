@@ -106,9 +106,9 @@ export default function Software() {
               <h1 className="font-poppins text-gold mb-4 text-5xl">Software Projects</h1>
               <p className="font-inter text-lg text-gray-400 max-w-2xl mx-auto">Innovative solutions built with cutting-edge technologies - from AI to blockchain, cloud infrastructure to data analytics</p>
               <div className="mt-6 flex items-center justify-center gap-2">
-                <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-gold to-blood-red"></div>
+                <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-gold to-blood-red rounded-full"></div>
                 <span className="font-inter text-sm text-gray-500">Explore</span>
-                <div className="w-20 h-0.5 bg-gradient-to-r from-blood-red via-gold to-transparent"></div>
+                <div className="w-20 h-0.5 bg-gradient-to-r from-blood-red via-gold to-transparent rounded-full"></div>
               </div>
             </div>
 

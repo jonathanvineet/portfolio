@@ -257,16 +257,16 @@ export default function Skills() {
                         transitionDelay: `${index * 30}ms`, // Reduced from 40ms to 30ms for faster reveal
                         willChange: visibleSkills[index] ? 'auto' : 'transform, opacity'
                       }}
-                      className={`tech-chip flex items-center gap-3 p-3 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] cursor-pointer transition-all duration-500 transform ${
+                      className={`glass-chip flex items-center gap-3 transition-all duration-500 transform ${
                         visibleSkills[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      } hover:scale-105 hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)]`}
+                      }`}
                     >
-                      <div className="chip-icon flex items-center justify-center w-10 h-10 rounded-md bg-[rgba(255,255,255,0.03)] text-xl text-white">
+                      <div className="chip-icon flex items-center justify-center w-10 h-10 rounded-md bg-[rgba(255,255,255,0.05)] text-xl text-white">
                         {IconNode}
                       </div>
                       <div className="flex flex-col text-left">
                         <div className="font-poppins text-white font-semibold text-sm">{skill.name}</div>
-                        <div className="font-inter text-xs text-gray-400 uppercase">{skill.category}</div>
+                        <div className="font-inter text-xs text-gray-400 uppercase tracking-wide">{skill.category}</div>
                       </div>
                     </div>
                   )
@@ -277,7 +277,7 @@ export default function Skills() {
 
           {/* Decorative accent */}
           <div className="mt-12 flex justify-center">
-            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-blood-red to-transparent"></div>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-blood-red to-transparent rounded-full"></div>
           </div>
         </div>
       </div>

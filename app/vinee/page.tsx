@@ -109,7 +109,7 @@ export default function VineePage() {
 
         {/* Three interest paragraphs - stacked full width */}
         <div className="w-full max-w-4xl mx-auto space-y-16">
-          <div className="glass-panel rounded-2xl p-8 border border-white/10">
+          <div className="glass-card-gold rounded-2xl p-8">
             <h2 className="text-white font-semibold text-2xl mb-4">Loyals</h2>
             <p className="text-gray-200 text-base leading-7">
               Poetry lets me distill feelings into rhythm and imagery. 
@@ -125,7 +125,7 @@ export default function VineePage() {
             </div>
           </div>
 
-          <div className="glass-panel rounded-2xl p-8 border border-white/10">
+          <div className="glass-card-red rounded-2xl p-8">
             <h2 className="text-white font-semibold text-2xl mb-4">Beasts</h2>
             <p className="text-gray-200 text-base leading-7">
               Photography is how I hold onto moments — light, texture, and emotion. 

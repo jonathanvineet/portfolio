@@ -35,13 +35,13 @@ export default function Contact() {
         Have a project in mind or just want to chat? Drop me a message and I'll get back to you as soon as possible.
       </p>
 
-      <div className="glass-panel max-w-2xl w-full p-8 md:p-12 rounded-lg">
+      <div className="glass-card max-w-2xl w-full p-8 md:p-12 rounded-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Input */}
           <div>
             <label 
               htmlFor="name" 
-              className="block font-inter text-sm text-gray-300 mb-2"
+              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
             >
               Name
             </label>
@@ -54,16 +54,7 @@ export default function Contact() {
               onFocus={() => setFocusedField('name')}
               onBlur={() => setFocusedField(null)}
               required
-              className={`
-                w-full px-4 py-3 bg-dark-panel border-2 rounded
-                font-inter text-white
-                transition-all duration-300
-                focus:outline-none
-                ${focusedField === 'name' 
-                  ? 'border-gold shadow-[0_0_15px_rgba(240,192,0,0.5)]' 
-                  : 'border-gray-700'
-                }
-              `}
+              className={`glass-input w-full ${focusedField === 'name' ? 'ring-2 ring-gold' : ''}`}
               placeholder="Your name"
             />
           </div>
@@ -72,7 +63,7 @@ export default function Contact() {
           <div>
             <label 
               htmlFor="email" 
-              className="block font-inter text-sm text-gray-300 mb-2"
+              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
             >
               Email
             </label>
@@ -85,16 +76,7 @@ export default function Contact() {
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
               required
-              className={`
-                w-full px-4 py-3 bg-dark-panel border-2 rounded
-                font-inter text-white
-                transition-all duration-300
-                focus:outline-none
-                ${focusedField === 'email' 
-                  ? 'border-blood-red shadow-[0_0_15px_rgba(170,26,26,0.5)]' 
-                  : 'border-gray-700'
-                }
-              `}
+              className={`glass-input w-full ${focusedField === 'email' ? 'ring-2 ring-blood-red' : ''}`}
               placeholder="your.email@example.com"
             />
           </div>
@@ -103,7 +85,7 @@ export default function Contact() {
           <div>
             <label 
               htmlFor="message" 
-              className="block font-inter text-sm text-gray-300 mb-2"
+              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
             >
               Message
             </label>
@@ -116,16 +98,7 @@ export default function Contact() {
               onBlur={() => setFocusedField(null)}
               required
               rows={6}
-              className={`
-                w-full px-4 py-3 bg-dark-panel border-2 rounded
-                font-inter text-white resize-none
-                transition-all duration-300
-                focus:outline-none
-                ${focusedField === 'message' 
-                  ? 'border-gold shadow-[0_0_15px_rgba(240,192,0,0.5)]' 
-                  : 'border-gray-700'
-                }
-              `}
+              className={`glass-input w-full resize-none ${focusedField === 'message' ? 'ring-2 ring-gold' : ''}`}
               placeholder="Tell me about your project..."
             />
           </div>
@@ -133,30 +106,20 @@ export default function Contact() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="
-              w-full py-4 px-8 
-              bg-transparent border-2 border-blood-red
-              text-blood-red font-poppins font-semibold text-lg
-              rounded cursor-pointer
-              transition-all duration-300
-              hover:bg-blood-red hover:text-dark-bg
-              hover:shadow-[0_0_25px_rgba(170,26,26,0.8)]
-              hover:transform hover:-translate-y-1
-              active:translate-y-0
-            "
+            className="w-full glass-button bg-gradient-to-r from-blood-red/20 to-gold/20 border-blood-red text-white font-poppins font-semibold text-lg hover:from-blood-red/40 hover:to-gold/40"
           >
             Send Message
           </button>
         </form>
 
         {/* Social Links or Additional Contact Info */}
-        <div className="mt-8 pt-8 border-t border-gray-700">
+        <div className="mt-8 pt-8 border-t border-white/10">
           <div className="flex justify-center space-x-6">
             <a 
-              href="mailto:your.email@example.com" 
+              href="mailto:cvineetjonathan@gmail.com" 
               className="text-gray-400 hover:text-gold transition-colors duration-300 font-inter text-sm"
             >
-              your.email@example.com
+              cvineetjonathan@gmail.com
             </a>
           </div>
         </div>

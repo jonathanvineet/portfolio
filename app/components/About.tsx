@@ -42,7 +42,7 @@ export default function About() {
       <div className="absolute inset-0 bg-black/55" aria-hidden="true"></div>
 
       <div 
-        className={`relative z-10 ${styles.heroGlass} max-w-4xl md:p-12 p-8 rounded-lg transition-all duration-1000 ${
+        className={`relative z-10 glass-card max-w-4xl md:p-12 p-8 rounded-2xl transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
@@ -71,8 +71,8 @@ export default function About() {
 
         {/* Decorative elements */}
         <div className="mt-8 flex justify-center space-x-8">
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-blood-red to-transparent"></div>
+          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-gold to-transparent rounded-full"></div>
+          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-blood-red to-transparent rounded-full"></div>
         </div>
       </div>
     </section>
