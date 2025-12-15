@@ -141,10 +141,10 @@ export default function Hero() {
           
             {/* Name & Title */}
             <div className="text-center">
-              <h1 className="font-poppins text-white mb-2">
+              <h1 className="text-white mb-2">
                 Vineet Jonathan
               </h1>
-              <p className="font-inter text-lg text-gray-400">
+              <p className="text-lg text-gray-400">
                 Engineer & Founder
               </p>
             </div>
@@ -163,13 +163,13 @@ export default function Hero() {
               
             {/* Badass Quote */}
             <div className="glass-card-gold rounded-2xl p-6 w-full">
-              <p className="font-poppins text-xl text-gold italic leading-relaxed text-center">
+              <p className="text-xl text-gold italic leading-relaxed text-center">
                 "Code is poetry, infrastructure is art,<br />
                 and disruption is the only constant."
               </p>
               <div className="mt-4 flex items-center justify-center gap-2">
                 <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-blood-red"></div>
-                <span className="font-inter text-sm text-gray-400">Always Shipping</span>
+                <span className="text-sm text-gray-400">Always Shipping</span>
               </div>
             </div>
               

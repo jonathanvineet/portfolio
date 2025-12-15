@@ -11,7 +11,7 @@ export default function Works() {
     <section className={styles.worksContainer}>
       <div className={styles.titleContainer}>
         <div className="glass-card rounded-2xl px-8 py-4">
-          <h2 className="font-poppins text-white">
+          <h2 className="text-white">
             PROJECTS
           </h2>
         </div>

@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo, memo } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiPython, SiDocker, SiAmazon, SiGithub, SiGraphql, SiPostgresql, SiMongodb, SiGit, SiJavascript, SiHtml5, SiCss3, SiVite, SiMysql, SiFirebase, SiEthereum, SiSolana, SiOpenai, SiOpencv, SiArduino, SiRaspberrypi } from 'react-icons/si'
+import * as SiIcons from 'react-icons/si'
 
 // Lazy load LogoLoop component to reduce initial bundle size
 const LogoLoop = dynamic(() => import('./LogoLoop'), {
@@ -79,51 +79,51 @@ export default function Skills() {
 
   // Tech logos for background animation - memoized to prevent recreation on re-renders
   const techLogos = useMemo(() => [
-    { node: <SiReact />, title: "React" },
-    { node: <SiNextdotjs />, title: "Next.js" },
-    { node: <SiTypescript />, title: "TypeScript" },
-    { node: <SiTailwindcss />, title: "Tailwind" },
-    { node: <SiNodedotjs />, title: "Node.js" },
-    { node: <SiPython />, title: "Python" },
-    { node: <SiDocker />, title: "Docker" },
-    { node: <SiAmazon />, title: "AWS" },
-    { node: <SiGithub />, title: "GitHub" },
-    { node: <SiGraphql />, title: "GraphQL" },
-    { node: <SiPostgresql />, title: "PostgreSQL" },
-    { node: <SiMongodb />, title: "MongoDB" },
-    { node: <SiGit />, title: "Git" },
+    { node: <SiIcons.SiReact />, title: "React" },
+    { node: <SiIcons.SiNextdotjs />, title: "Next.js" },
+    { node: <SiIcons.SiTypescript />, title: "TypeScript" },
+    { node: <SiIcons.SiTailwindcss />, title: "Tailwind" },
+    { node: <SiIcons.SiNodedotjs />, title: "Node.js" },
+    { node: <SiIcons.SiPython />, title: "Python" },
+    { node: <SiIcons.SiDocker />, title: "Docker" },
+    { node: <SiIcons.SiAmazon />, title: "AWS" },
+    { node: <SiIcons.SiGithub />, title: "GitHub" },
+    { node: <SiIcons.SiGraphql />, title: "GraphQL" },
+    { node: <SiIcons.SiPostgresql />, title: "PostgreSQL" },
+    { node: <SiIcons.SiMongodb />, title: "MongoDB" },
+    { node: <SiIcons.SiGit />, title: "Git" },
   ], [])
 
   // Map skill names to icons for the tech-stack chips - memoized
   const skillIconMap: Record<string, JSX.Element> = useMemo(() => ({
-    'React': <SiReact />,
-    'Next.js': <SiNextdotjs />,
-    'TypeScript': <SiTypescript />,
-    'Tailwind CSS': <SiTailwindcss />,
-    'Node.js': <SiNodedotjs />,
-    'Python': <SiPython />,
-    'Docker': <SiDocker />,
-    'AWS': <SiAmazon />,
-    'GitHub': <SiGithub />,
-    'GraphQL': <SiGraphql />,
-    'PostgreSQL': <SiPostgresql />,
-    'MongoDB': <SiMongodb />,
-    'Git': <SiGit />,
-    'JavaScript': <SiJavascript />,
-    'HTML5': <SiHtml5 />,
-    'CSS3': <SiCss3 />,
-    'Vite': <SiVite />,
-    'MySQL': <SiMysql />,
-    'Firebase': <SiFirebase />,
-    'Ethereum': <SiEthereum />,
-    'Solana': <SiSolana />,
-    'OpenAI': <SiOpenai />,
-    'OpenCV': <SiOpencv />,
-    'Arduino': <SiArduino />,
-    'Raspberry Pi': <SiRaspberrypi />,
-    'Solidity': <SiEthereum />,
-    'CI/CD': <SiGithub />,
-    'Monitoring': <SiGithub />,
+    'React': <SiIcons.SiReact />,
+    'Next.js': <SiIcons.SiNextdotjs />,
+    'TypeScript': <SiIcons.SiTypescript />,
+    'Tailwind CSS': <SiIcons.SiTailwindcss />,
+    'Node.js': <SiIcons.SiNodedotjs />,
+    'Python': <SiIcons.SiPython />,
+    'Docker': <SiIcons.SiDocker />,
+    'AWS': <SiIcons.SiAmazon />,
+    'GitHub': <SiIcons.SiGithub />,
+    'GraphQL': <SiIcons.SiGraphql />,
+    'PostgreSQL': <SiIcons.SiPostgresql />,
+    'MongoDB': <SiIcons.SiMongodb />,
+    'Git': <SiIcons.SiGit />,
+    'JavaScript': <SiIcons.SiJavascript />,
+    'HTML5': <SiIcons.SiHtml5 />,
+    'CSS3': <SiIcons.SiCss3 />,
+    'Vite': <SiIcons.SiVite />,
+    'MySQL': <SiIcons.SiMysql />,
+    'Firebase': <SiIcons.SiFirebase />,
+    'Ethereum': <SiIcons.SiEthereum />,
+    'Solana': <SiIcons.SiSolana />,
+    'OpenAI': <SiIcons.SiOpenai />,
+    'OpenCV': <SiIcons.SiOpencv />,
+    'Arduino': <SiIcons.SiArduino />,
+    'Raspberry Pi': <SiIcons.SiRaspberrypi />,
+    'Solidity': <SiIcons.SiEthereum />,
+    'CI/CD': <SiIcons.SiGithub />,
+    'Monitoring': <SiIcons.SiGithub />,
   }), [])
 
   useEffect(() => {
@@ -162,19 +162,6 @@ export default function Skills() {
       acc[s.category].push(s)
       return acc
     }, {})
-  }
-
-  // helper: small emoji/icon per category to match the screenshot feel
-  function categoryEmoji(category: string) {
-    if (category.toLowerCase().includes('language')) return '💻'
-    if (category.toLowerCase().includes('frontend')) return '🎨'
-    if (category.toLowerCase().includes('backend')) return '⚙️'
-    if (category.toLowerCase().includes('database')) return '🗄️'
-    if (category.toLowerCase().includes('blockchain')) return '🔗'
-    if (category.toLowerCase().includes('ai') || category.toLowerCase().includes('computer')) return '🤖'
-    if (category.toLowerCase().includes('embedded') || category.toLowerCase().includes('iot')) return '🛰️'
-    if (category.toLowerCase().includes('devops')) return '🛠️'
-    return '🔹'
   }
 
   return (
@@ -231,7 +218,7 @@ export default function Skills() {
 
       {/* Scrollable content - starts at top, visible above glass */}
       <div className="relative w-full max-w-5xl mx-auto px-8 py-28" style={{ zIndex: 20 }}>
-        <h2 className="font-poppins text-gold mb-6 text-center text-4xl">
+        <h2 className="text-gold mb-6 text-center text-4xl">
           Skills & Technologies
         </h2>
         <p className="text-center text-gray-400 italic mb-8">"I collect tools the way some people collect stamps — only shinier."</p>
@@ -239,15 +226,14 @@ export default function Skills() {
         <div className="w-full space-y-8 pb-20">
           {Object.entries(groupSkillsByCategory(skills)).map(([category, items]) => (
             <div key={category} className="skill-category">
-              <h3 className="font-poppins text-white text-lg mb-4 flex items-center gap-3">
-                <span className="category-emoji">{categoryEmoji(category)}</span>
+              <h3 className="text-white text-lg mb-4">
                 {category}
               </h3>
 
               <div className="chips-row flex flex-wrap gap-3">
                 {items.map((skill) => {
                   const index = skills.findIndex(s => s.name === skill.name)
-                  const IconNode = skillIconMap[skill.name] ?? <SiGithub />
+                  const IconNode = skillIconMap[skill.name] ?? <SiIcons.SiGithub />
 
                   return (
                     <div

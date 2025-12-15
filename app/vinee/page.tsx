@@ -98,7 +98,7 @@ export default function VineePage() {
         {/* Header name */}
         <div className="text-center mb-8">
           <p className="text-sm text-gray-300 mb-2">You've entered the batcave</p>
-          <h1 className="font-poppins text-white text-4xl">Vinee</h1>
+          <h1 className="text-white text-4xl">Vinee</h1>
         </div>
 
         {/* Profile image - Rotating Cards */}

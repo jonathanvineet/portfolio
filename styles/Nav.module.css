@@ -68,7 +68,7 @@
 .navLink {
   position: relative;
   color: rgba(255, 255, 255, 0.7);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Iwona', sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -204,7 +204,7 @@
 .mobileLink {
   display: block;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Iwona', sans-serif;
   font-size: 1rem;
   font-weight: 500;
   padding: 1rem;

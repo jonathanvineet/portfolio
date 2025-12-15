@@ -46,24 +46,24 @@ export default function About() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <h2 className="font-poppins text-gold mb-6 text-center">
+        <h2 className="text-gold mb-6 text-center">
           About Me
         </h2>
         
         <div className="space-y-4">
-          <p className="font-inter text-gray-300 leading-relaxed">
+          <p className="text-gray-300 leading-relaxed">
             I'm a passionate <span className="text-gold font-semibold">full-stack developer</span> specializing 
             in building exceptional digital experiences. With expertise in modern web technologies, I craft 
             solutions that are not only visually stunning but also highly functional and performant.
           </p>
           
-          <p className="font-inter text-gray-300 leading-relaxed">
+          <p className="text-gray-300 leading-relaxed">
             My approach combines <span className="text-blood-red font-semibold">technical excellence</span> with 
             creative problem-solving, ensuring every project I undertake pushes the boundaries of what's possible 
             on the web.
           </p>
           
-          <p className="font-inter text-gray-300 leading-relaxed">
+          <p className="text-gray-300 leading-relaxed">
             When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, 
             and staying ahead of the curve in the ever-evolving world of web development.
           </p>

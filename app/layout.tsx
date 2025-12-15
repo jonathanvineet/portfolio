@@ -6,6 +6,13 @@ import type { Metadata } from 'next'
 import Nav from './components/Nav'
 import PageLoader from './components/PageLoader'
 
+const customFonts = () => (
+  <>
+    <link href="https://fonts.cdnfonts.com/css/batmanforeveralternate" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/iwona" rel="stylesheet" />
+  </>
+)
+
 export const metadata: Metadata = {
   title: 'Portfolio | Wayne Enterprise',
   description: 'Modern dark-tech portfolio with Batman/Wayne Enterprises aesthetic',
@@ -18,7 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        {customFonts()}
+      </head>
       <body>
         <PageLoader />
         <div className="page-content">

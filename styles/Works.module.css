@@ -132,7 +132,7 @@
 }
 
 .categoryTitle {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'BatmanForeverAlternate', sans-serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 700;
   color: #ffffff;
@@ -155,7 +155,7 @@
 }
 
 .categorySubtitle {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Iwona', sans-serif;
   font-size: clamp(1rem, 2vw, 1.3rem);
   color: rgba(255, 255, 255, 0.85);
   font-weight: 300;

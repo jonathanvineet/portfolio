@@ -103,11 +103,11 @@ export default function Hardware() {
         <div className="w-full max-w-7xl mx-auto">
           <div className="flex flex-col items-center space-y-12">
             <div className="text-center mb-8">
-              <h1 className="font-poppins text-blood-red mb-4 text-5xl">Hardware Projects</h1>
-              <p className="font-inter text-lg text-gray-400 max-w-2xl mx-auto">Physical computing innovations - from embedded systems to robotics, IoT devices to custom electronics</p>
+              <h1 className="text-blood-red mb-4 text-5xl">Hardware Projects</h1>
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto">Physical computing innovations - from embedded systems to robotics, IoT devices to custom electronics</p>
               <div className="mt-6 flex items-center justify-center gap-2">
                 <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-blood-red to-gold rounded-full"></div>
-                <span className="font-inter text-sm text-gray-500">Build</span>
+                <span className="text-sm text-gray-500">Build</span>
                 <div className="w-20 h-0.5 bg-gradient-to-r from-gold via-blood-red to-transparent rounded-full"></div>
               </div>
             </div>

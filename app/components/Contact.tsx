@@ -27,11 +27,11 @@ export default function Contact() {
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-dark-bg px-4 py-20">
-      <h2 className="font-poppins text-gold mb-4 text-center">
+      <h2 className="text-gold mb-4 text-center">
         Get In Touch
       </h2>
       
-      <p className="font-inter text-gray-400 text-center mb-12 max-w-xl">
+      <p className="text-gray-400 text-center mb-12 max-w-xl">
         Have a project in mind or just want to chat? Drop me a message and I'll get back to you as soon as possible.
       </p>
 
@@ -41,7 +41,7 @@ export default function Contact() {
           <div>
             <label 
               htmlFor="name" 
-              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
+              className="block text-sm text-gray-300 mb-2 font-medium"
             >
               Name
             </label>
@@ -63,7 +63,7 @@ export default function Contact() {
           <div>
             <label 
               htmlFor="email" 
-              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
+              className="block text-sm text-gray-300 mb-2 font-medium"
             >
               Email
             </label>
@@ -85,7 +85,7 @@ export default function Contact() {
           <div>
             <label 
               htmlFor="message" 
-              className="block font-inter text-sm text-gray-300 mb-2 font-medium"
+              className="block text-sm text-gray-300 mb-2 font-medium"
             >
               Message
             </label>
@@ -106,7 +106,7 @@ export default function Contact() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full glass-button bg-gradient-to-r from-blood-red/20 to-gold/20 border-blood-red text-white font-poppins font-semibold text-lg hover:from-blood-red/40 hover:to-gold/40"
+            className="w-full glass-button bg-gradient-to-r from-blood-red/20 to-gold/20 border-blood-red text-white font-semibold text-lg hover:from-blood-red/40 hover:to-gold/40"
           >
             Send Message
           </button>
@@ -117,7 +117,7 @@ export default function Contact() {
           <div className="flex justify-center space-x-6">
             <a 
               href="mailto:cvineetjonathan@gmail.com" 
-              className="text-gray-400 hover:text-gold transition-colors duration-300 font-inter text-sm"
+              className="text-gray-400 hover:text-gold transition-colors duration-300 text-sm"
             >
               cvineetjonathan@gmail.com
             </a>
