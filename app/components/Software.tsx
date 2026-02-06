@@ -4,19 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styles from '../../styles/Hero.module.css'
 import ProjectCard from './ProjectCard'
-import { supabase } from '../lib/supabaseClient'
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  image_name: string
-  github_url: string | null
-  demo_url: string | null
-  twitter_url: string | null
-  type: string
-  created_at: string
-}
+import { getSoftwareProjects, type Project } from '../lib/githubClient'
 
 export default function Software() {
   const [mounted, setMounted] = useState(false)
@@ -43,21 +31,14 @@ export default function Software() {
 
   useEffect(() => {
     async function fetchProjects() {
-      if (!supabase) {
-        console.error('Supabase client not initialized')
-        setLoading(false)
-        return
-      }
-
       try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('type', 'software')
-          .order('created_at', { ascending: false })
-
-        if (error) throw error
-        setSoftwareProjects(data || [])
+        // Replace 'jonathanvineet' with your actual GitHub username
+        // You can also set NEXT_PUBLIC_GITHUB_USERNAME in your .env file
+        const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'jonathanvineet'
+        const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN // Optional: for higher rate limits
+        
+        const projects = await getSoftwareProjects(username, token)
+        setSoftwareProjects(projects)
       } catch (error) {
         console.error('Error fetching software projects:', error)
       } finally {
@@ -80,12 +61,6 @@ export default function Software() {
       </div>
     </>
   )
-
-  const getImageUrl = (imageName: string) => {
-    if (!supabase) return '/assets/iot.svg'
-    const { data } = supabase.storage.from('projects').getPublicUrl(imageName)
-    return data.publicUrl
-  }
 
   return (
     <section
@@ -123,11 +98,10 @@ export default function Software() {
                     key={project.id} 
                     title={project.title} 
                     description={project.description || ''} 
-                    imageUrl={getImageUrl(project.image_name)} 
+                    imageUrl={project.imageUrl} 
                     links={{ 
-                      github: project.github_url || undefined, 
-                      demo: project.demo_url || undefined, 
-                      twitter: project.twitter_url || undefined 
+                      github: project.github_url, 
+                      demo: project.demo_url || undefined
                     }} 
                   />
                 ))

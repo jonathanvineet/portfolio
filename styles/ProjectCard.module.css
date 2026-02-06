@@ -3,6 +3,7 @@
   width: 290px;
   height: 300px;
   perspective: 1000px;
+  flex-shrink: 0;
 }
 
 .card {
@@ -61,6 +62,8 @@
   transform: translate3d(0, 0, 26px);
   position: relative;
   z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .content .title {
@@ -250,6 +253,10 @@
 .parent:hover .card {
   transform: rotate3d(1, 1, 0, 30deg);
   box-shadow: rgba(0, 0, 0, 0.3) 30px 50px 25px -40px, rgba(0, 0, 0, 0.1) 0px 25px 30px 0px;
+}
+
+.parent:hover .content {
+  opacity: 1;
 }
 
 .parent:hover .card .bottom .socialButtonsContainer .socialButton {
