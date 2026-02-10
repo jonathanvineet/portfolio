@@ -275,6 +275,18 @@ class App {
     this.onResize();
     this.createGeometry();
     this.createMedias(items, bend, textColor, borderRadius, font);
+    
+    // Initialize scroll position to fill the viewport from left edge
+    // Calculate how many images needed to fill the viewport width
+    if (this.medias && this.medias.length > 0) {
+      const imageWidth = this.medias[0].width;
+      const imagesNeeded = Math.ceil(this.viewport.width / imageWidth) + 1;
+      const startOffset = imagesNeeded * imageWidth;
+      this.scroll.current = startOffset;
+      this.scroll.target = this.scroll.current;
+      this.scroll.last = this.scroll.current;
+    }
+    
     this.update();
     this.addEventListeners();
   }
