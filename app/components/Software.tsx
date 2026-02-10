@@ -87,23 +87,31 @@ export default function Software() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 xl:gap-10 w-full justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 xl:gap-10 w-full justify-items-center transition-all duration-700 ease-in-out">
               {loading ? (
-                <div className="col-span-full text-center text-gray-400">Loading projects...</div>
+                <div className="col-span-full text-center text-gray-400 animate-pulse">Loading projects...</div>
               ) : softwareProjects.length === 0 ? (
-                <div className="col-span-full text-center text-gray-400">No software projects found.</div>
+                <div className="col-span-full text-center text-gray-400 opacity-0 animate-fade-in">No software projects found.</div>
               ) : (
-                softwareProjects.map((project) => (
-                  <ProjectCard 
-                    key={project.id} 
-                    title={project.title} 
-                    description={project.description || ''} 
-                    imageUrl={project.imageUrl} 
-                    links={{ 
-                      github: project.github_url, 
-                      demo: project.demo_url || undefined
-                    }} 
-                  />
+                softwareProjects.map((project, index) => (
+                  <div 
+                    key={project.id}
+                    className="opacity-0 animate-fade-in-up"
+                    style={{ 
+                      animationDelay: `${index * 0.1}s`,
+                      animationFillMode: 'forwards'
+                    }}
+                  >
+                    <ProjectCard 
+                      title={project.title} 
+                      description={project.description || ''} 
+                      imageUrl={project.imageUrl} 
+                      links={{ 
+                        github: project.github_url, 
+                        demo: project.demo_url || undefined
+                      }} 
+                    />
+                  </div>
                 ))
               )}
             </div>

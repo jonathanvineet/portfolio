@@ -1,4 +1,4 @@
-/* 3D Project Card - Uiverse Animation with Image Background */
+/* 3D Project Card - Optimized Animation with Image Background */
 .parent {
   width: 290px;
   height: 300px;
@@ -10,10 +10,12 @@
   height: 100%;
   border-radius: 50px;
   position: relative;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
   box-shadow: rgba(0, 0, 0, 0) 40px 50px 25px -40px, rgba(0, 0, 0, 0.4) 0px 25px 25px -5px;
   background: #000000;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Image fills entire card background */
