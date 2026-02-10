@@ -2,13 +2,21 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from '../../styles/Hero.module.css'
-import CircularGallery from './CircularGallery'
+import Stack from './Stack'
 import { supabase } from '../lib/supabaseClient'
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 export default function Hero() {
   const [galleryItems, setGalleryItems] = useState<{ image: string; text: string }[]>([])
   const [mounted, setMounted] = useState(false)
+  const [stackImages, setStackImages] = useState<string[][]>([[], [], [], []])
 
   // Fetch gallery images from Supabase (if configured). If Supabase is not
   // available (missing NEXT_PUBLIC_SUPABASE_KEY), fall back to static images
@@ -16,8 +24,7 @@ export default function Hero() {
   useEffect(() => {
     const staticFallback = [
       { image: '/assets/IMG_4654.jpeg', text: 'Adventure' },
-      { image: '/assets/IMG_4654.jpeg', text: 'Tech Life' },
-      { image: '/assets/IMG_4654.jpeg', text: 'Moments' },
+      { image: '/assets/IMG_6508.jpeg', text: 'Tech Life' },
     ]
 
     if (!supabase) {
@@ -25,6 +32,7 @@ export default function Hero() {
       // eslint-disable-next-line no-console
       console.warn('Supabase client not available; using static gallery fallback.')
       setGalleryItems(staticFallback)
+      distributeImages(staticFallback.map(item => item.image))
       return
     }
 
@@ -34,6 +42,7 @@ export default function Hero() {
         if (!client) {
           console.warn('Supabase client not available; using static gallery fallback.')
           setGalleryItems(staticFallback)
+          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -48,6 +57,7 @@ export default function Hero() {
         if (error) {
           console.error('Error loading images from Supabase:', error)
           setGalleryItems(staticFallback)
+          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -56,6 +66,7 @@ export default function Hero() {
         if (!data || data.length === 0) {
           console.warn('No images found in Supabase bucket — using fallback')
           setGalleryItems(staticFallback)
+          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -76,19 +87,114 @@ export default function Hero() {
 
         console.log(`Gallery loaded with ${urls.length} images`)
         setGalleryItems(urls)
+        distributeImages(urls.map(item => item.image))
       } catch (err) {
         console.error('Unexpected error fetching images:', err)
         setGalleryItems(staticFallback)
+        distributeImages(staticFallback.map(item => item.image))
       }
     }
 
     fetchImages()
   }, [])
 
+  // Distribute images across 4 stacks ensuring no duplicates
+  const distributeImages = (images: string[]) => {
+    const minImagesPerStack = 4
+    const totalNeeded = minImagesPerStack * 4
+
+    // Ensure we have enough images
+    if (images.length < totalNeeded) {
+      console.warn(`Not enough images (${images.length}), need at least ${totalNeeded}`)
+      // If not enough images, repeat the available ones
+      while (images.length < totalNeeded) {
+        images = [...images, ...images].slice(0, totalNeeded)
+      }
+    }
+
+    // Shuffle images to randomize distribution
+    const shuffled = [...images].sort(() => Math.random() - 0.5)
+    
+    // Distribute evenly across 4 stacks
+    const stacks: string[][] = [[], [], [], []]
+    shuffled.forEach((img, index) => {
+      stacks[index % 4].push(img)
+    })
+
+    setStackImages(stacks)
+  }
+
   useEffect(() => {
     setMounted(true)
     return () => setMounted(false)
   }, [])
+
+  // GSAP ScrollTrigger animations
+  useEffect(() => {
+    if (!mounted) return
+
+    // Set initial states with less extreme offsets
+    gsap.set('.scroll-animate[data-animation="slide-right"]', {
+      x: 150,
+      opacity: 0.3,
+      scale: 0.9
+    })
+    
+    gsap.set('.scroll-animate[data-animation="slide-left"]', {
+      x: -150, 
+      opacity: 0.3,
+      scale: 0.9
+    })
+
+    // Create scroll-triggered animations
+    gsap.utils.toArray('.scroll-animate').forEach((element: any) => {
+      const animation = element.getAttribute('data-animation')
+      
+      let animationProps = {}
+      
+      switch (animation) {
+        case 'slide-right':
+          animationProps = { 
+            x: 0, 
+            opacity: 1, 
+            scale: 1,
+            ease: "power2.out"
+          }
+          break
+        case 'slide-left':
+          animationProps = { 
+            x: 0, 
+            opacity: 1, 
+            scale: 1,
+            ease: "power2.out"
+          }
+          break
+        default:
+          animationProps = { 
+            x: 0, 
+            opacity: 1, 
+            scale: 1,
+            ease: "power2.out"
+          }
+      }
+      
+      gsap.to(element, {
+        ...animationProps,
+        duration: 1.2,
+        scrollTrigger: {
+          trigger: element,
+          start: "top bottom", // Start as soon as element enters viewport
+          end: "top center", // Complete by the time element is centered
+          scrub: 1, 
+          toggleActions: "play reverse play reverse"
+        }
+      })
+    })
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    }
+  }, [mounted])
 
   // Create portal root for hero fixed backgrounds so they remain fixed to viewport
   useEffect(() => {
@@ -135,8 +241,8 @@ export default function Hero() {
       {mounted && portalRoot ? createPortal(fixedBackgrounds, portalRoot) : fixedBackgrounds}
 
       {/* Scrollable content */}
-      <div className="container mx-auto px-6 py-0 relative" style={{ zIndex: 20 }}>
-        <div className="w-full max-w-4xl mx-auto"> 
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-0 relative" style={{ zIndex: 20 }}>
+        <div className="w-full mx-auto"> 
           <div className="flex flex-col items-center space-y-8">
           
             {/* Name & Title */}
@@ -162,7 +268,7 @@ export default function Hero() {
             </div>
               
             {/* Badass Quote */}
-            <div className="glass-card-gold rounded-2xl p-6 w-full">
+            <div className="glass-card-gold rounded-2xl p-6 w-full max-w-4xl mx-auto">
               <p className="text-xl text-gold italic leading-relaxed text-center">
                 "Code is poetry, infrastructure is art,<br />
                 and disruption is the only constant."
@@ -189,18 +295,132 @@ export default function Hero() {
               </a>
             </div>
             
-            {/* Circular Gallery - Full Screen Width */}
-            <div className="relative w-screen h-[600px] -mx-6">
-              <CircularGallery
-                items={galleryItems}
-                bend={0}
-                textColor="#F0C000"
-                borderRadius={0.0}
-                scrollSpeed={2}
-                scrollEase={0.02}
-                autoRotate={true}
-                autoSpeed={1.2}
-              />
+            {/* New Layout: About Me (Left) + 4 Stacks (Right) */}
+            <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6 lg:gap-8 mt-12 w-full">
+              
+              {/* About Me Section - Left Side (40%) */}
+              <div 
+                className="w-full lg:w-[40%] scroll-animate"
+                data-animation="slide-left"
+              >
+                <div className="glass-card rounded-3xl p-6 sm:p-8">
+                  <div className="text-center lg:text-left">
+                    <h2 className="text-3xl text-gold mb-6 font-semibold">Me?</h2>
+                    <div className="mb-6">
+
+                    </div>
+                    <p className="text-gray-300 text-lg leading-relaxed mb-4">
+                      I'm a passionate engineer and founder who thrives at the intersection of technology and innovation. 
+                      With expertise spanning from hardware design to software architecture, I build solutions that make a difference.
+                    </p>
+                    <p className="text-gray-400 leading-relaxed mb-6">
+                      When I'm not coding or building, you'll find me exploring photography, writing poetry, or diving deep into 
+                      the latest technological advances. Every project is an opportunity to learn, create, and push boundaries.
+                    </p>
+                    <div className="flex items-center justify-center lg:justify-start gap-2">
+                      <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-blood-red"></div>
+                      <span className="text-sm text-gray-400">Always Learning</span>
+                      <div className="w-12 h-0.5 bg-gradient-to-r from-blood-red to-gold"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 Stack Components - Right Side (60%) in 2x2 Grid */}
+              <div 
+                className="w-full lg:w-[60%] scroll-animate"
+                data-animation="slide-right"
+              >
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                  {/* Stack 1 - Top Left */}
+                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
+                    {stackImages[0].length > 0 && (
+                      <Stack
+                        randomRotation
+                        sensitivity={200}
+                        sendToBackOnClick={true}
+                        cards={stackImages[0].map((src, i) => (
+                          <img 
+                            key={i} 
+                            src={src} 
+                            alt={`stack1-card-${i + 1}`} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        ))}
+                        autoplay
+                        autoplayDelay={3000}
+                        pauseOnHover={false}
+                      />
+                    )}
+                  </div>
+
+                  {/* Stack 2 - Top Right */}
+                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
+                    {stackImages[1].length > 0 && (
+                      <Stack
+                        randomRotation
+                        sensitivity={200}
+                        sendToBackOnClick={true}
+                        cards={stackImages[1].map((src, i) => (
+                          <img 
+                            key={i} 
+                            src={src} 
+                            alt={`stack2-card-${i + 1}`} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        ))}
+                        autoplay
+                        autoplayDelay={3200}
+                        pauseOnHover={false}
+                      />
+                    )}
+                  </div>
+
+                  {/* Stack 3 - Bottom Left */}
+                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
+                    {stackImages[2].length > 0 && (
+                      <Stack
+                        randomRotation
+                        sensitivity={200}
+                        sendToBackOnClick={true}
+                        cards={stackImages[2].map((src, i) => (
+                          <img 
+                            key={i} 
+                            src={src} 
+                            alt={`stack3-card-${i + 1}`} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        ))}
+                        autoplay
+                        autoplayDelay={3400}
+                        pauseOnHover={false}
+                      />
+                    )}
+                  </div>
+
+                  {/* Stack 4 - Bottom Right */}
+                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
+                    {stackImages[3].length > 0 && (
+                      <Stack
+                        randomRotation
+                        sensitivity={200}
+                        sendToBackOnClick={true}
+                        cards={stackImages[3].map((src, i) => (
+                          <img 
+                            key={i} 
+                            src={src} 
+                            alt={`stack4-card-${i + 1}`} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        ))}
+                        autoplay
+                        autoplayDelay={3600}
+                        pauseOnHover={false}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
