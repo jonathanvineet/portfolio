@@ -95,17 +95,21 @@ export function transformRepoToProject(repo: GitHubRepo): Project {
  * Get project image based on language or topics
  */
 function getProjectImage(repo: GitHubRepo): string {
+  // For now, return a solid black image or dark themed image
+  // You can replace this with your preferred project images
+  return '/assets/software.jpg' // Using the dark software.jpg image for all projects
+  
   // Check for specific topics
   const topics = repo.topics || []
   
   if (topics.includes('ai') || topics.includes('machine-learning') || topics.includes('ml')) {
-    return '/assets/ai.svg'
+    return '/assets/software.jpg'
   }
   if (topics.includes('blockchain') || topics.includes('web3')) {
-    return '/assets/blockchain.svg'
+    return '/assets/software.jpg'
   }
   if (topics.includes('iot') || topics.includes('hardware')) {
-    return '/assets/iot.svg'
+    return '/assets/hardware.jpg'
   }
   
   // Fallback to language-based images
@@ -114,20 +118,20 @@ function getProjectImage(repo: GitHubRepo): string {
   switch (language) {
     case 'javascript':
     case 'typescript':
-      return '/assets/javascript.svg'
+      return '/assets/software.jpg'
     case 'python':
-      return '/assets/python.svg'
+      return '/assets/software.jpg'
     case 'java':
-      return '/assets/java.svg'
+      return '/assets/software.jpg'
     case 'go':
-      return '/assets/golang.svg'
+      return '/assets/software.jpg'
     case 'rust':
-      return '/assets/rust.svg'
+      return '/assets/software.jpg'
     case 'c++':
     case 'c':
-      return '/assets/cpp.svg'
+      return '/assets/software.jpg'
     default:
-      return '/assets/code.svg'
+      return '/assets/software.jpg'
   }
 }
 

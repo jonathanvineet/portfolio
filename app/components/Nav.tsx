@@ -98,7 +98,7 @@ export default function Nav() {
         {/* Mobile Menu Toggle */}
         <button
           aria-label="Toggle menu"
-          className={`${styles.mobileToggle} md:hidden`}
+          className={styles.mobileToggle}
           onClick={() => setOpen(!open)}
         >
           <span className={`${styles.hamburger} ${open ? styles.open : ''}`}></span>

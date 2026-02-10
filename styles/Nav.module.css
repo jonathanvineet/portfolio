@@ -43,6 +43,7 @@
   position: relative;
 }
 
+/* Show desktop nav on tablet and up */
 @media (min-width: 768px) {
   .navLinks {
     display: flex;
@@ -129,32 +130,41 @@
   position: relative;
 }
 
+/* Hide mobile toggle on desktop */
+@media (min-width: 768px) {
+  .mobileToggle {
+    display: none;
+  }
+}
+
 .hamburger {
-  width: 18px;
+  width: 16px;
   height: 2px;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 2px;
+  border-radius: 1px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
 .hamburger::before,
 .hamburger::after {
   content: '';
   position: absolute;
-  width: 18px;
+  left: 0;
+  width: 16px;
   height: 2px;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 2px;
+  border-radius: 1px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hamburger::before {
-  top: -6px;
+  top: -5px;
 }
 
 .hamburger::after {
-  bottom: -6px;
+  bottom: -5px;
 }
 
 .hamburger.open {
@@ -171,6 +181,16 @@
   bottom: 0;
   transform: rotate(-45deg);
   background: #F0C000;
+}
+
+.mobileToggle:hover {
+  background: rgba(240, 192, 0, 0.15);
+  border-color: rgba(240, 192, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.mobileToggle:active {
+  transform: scale(0.95);
 }
 
 /* Mobile Menu */
