@@ -8,3 +8,8 @@ node_modules/
 .env.local
 .env.*.local
 /public/assets/
+
+# Large files - use Git LFS or store separately
+assets/the_batcave.zip
+assets/the_batcave/scene.bin
+assets/batman/buffer.bin
