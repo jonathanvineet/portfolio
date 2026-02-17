@@ -7,7 +7,9 @@ node_modules/
 .vercel
 .env.local
 .env.*.local
-/public/assets/
+
+# Allow public assets but ignore large binary files
+/public/assets/*.bin
 
 # Large files - use Git LFS or store separately
 assets/the_batcave.zip
