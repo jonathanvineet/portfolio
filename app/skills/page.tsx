@@ -1,3 +1,5 @@
+'use client'
+
 import { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import PageLoader from '../components/PageLoader'
