@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <path d="M60 80 L100 50 L140 80 L140 120 L100 150 L60 120 Z" fill="#16213e" stroke="#007396" stroke-width="3"/>
+  <circle cx="85" cy="90" r="15" fill="#007396"/>
+  <circle cx="115" cy="110" r="15" fill="#f89820"/>
+  <text x="100" y="180" text-anchor="middle" fill="#007396" font-size="16" font-family="monospace">JAVA</text>
+</svg>

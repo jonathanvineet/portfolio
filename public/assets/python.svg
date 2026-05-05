@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <path d="M50 100 L75 60 L125 60 L150 100 L125 140 L75 140 Z" fill="#16213e" stroke="#306998" stroke-width="3"/>
+  <path d="M50 100 L75 60 L125 60 L150 100 L125 140 L75 140 Z" fill="none" stroke="#ffd43b" stroke-width="2" stroke-dasharray="5,5"/>
+  <circle cx="85" cy="85" r="8" fill="#306998"/>
+  <circle cx="115" cy="85" r="8" fill="#ffd43b"/>
+  <circle cx="85" cy="115" r="8" fill="#ffd43b"/>
+  <circle cx="115" cy="115" r="8" fill="#306998"/>
+  <text x="100" y="175" text-anchor="middle" fill="#ffd43b" font-size="14" font-family="monospace">PYTHON</text>
+</svg>

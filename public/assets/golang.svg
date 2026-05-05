@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <path d="M50 90 Q100 60 150 90 Q100 120 50 90 Z" fill="#16213e" stroke="#00add8" stroke-width="3"/>
+  <circle cx="80" cy="85" r="10" fill="#00add8"/>
+  <circle cx="120" cy="85" r="10" fill="#00add8"/>
+  <path d="M70 110 Q100 125 130 110" stroke="#00add8" stroke-width="3" fill="none"/>
+  <text x="100" y="175" text-anchor="middle" fill="#00add8" font-size="16" font-family="monospace">GOLANG</text>
+</svg>

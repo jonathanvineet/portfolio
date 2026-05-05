@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <circle cx="100" cy="70" r="30" fill="#16213e" stroke="#ff6b6b" stroke-width="3"/>
+  <circle cx="100" cy="70" r="20" fill="#ff6b6b"/>
+  <path d="M60 120 Q100 90 140 120 Q100 150 60 120 Z" fill="#16213e" stroke="#ee5a6f" stroke-width="2"/>
+  <circle cx="80" cy="115" r="5" fill="#ff6b6b"/>
+  <circle cx="120" cy="115" r="5" fill="#ff6b6b"/>
+  <text x="100" y="180" text-anchor="middle" fill="#ff6b6b" font-size="14" font-family="monospace">AI/ML</text>
+</svg>

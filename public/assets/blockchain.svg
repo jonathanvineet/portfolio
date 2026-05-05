@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <rect x="60" y="40" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <rect x="105" y="40" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <rect x="60" y="85" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <rect x="105" y="85" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <rect x="60" y="130" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <rect x="105" y="130" width="30" height="30" fill="#16213e" stroke="#f7931a" stroke-width="2"/>
+  <line x1="75" y1="70" x2="75" y2="85" stroke="#f7931a" stroke-width="2"/>
+  <line x1="120" y1="70" x2="120" y2="85" stroke="#f7931a" stroke-width="2"/>
+  <line x1="75" y1="115" x2="75" y2="130" stroke="#f7931a" stroke-width="2"/>
+  <line x1="120" y1="115" x2="120" y2="130" stroke="#f7931a" stroke-width="2"/>
+  <line x1="90" y1="55" x2="105" y2="55" stroke="#f7931a" stroke-width="2"/>
+  <line x1="90" y1="100" x2="105" y2="100" stroke="#f7931a" stroke-width="2"/>
+  <line x1="90" y1="145" x2="105" y2="145" stroke="#f7931a" stroke-width="2"/>
+  <text x="100" y="185" text-anchor="middle" fill="#f7931a" font-size="12" font-family="monospace">BLOCKCHAIN</text>
+</svg>
