@@ -17,6 +17,56 @@ export default function Hero() {
   const [galleryItems, setGalleryItems] = useState<{ image: string; text: string }[]>([])
   const [mounted, setMounted] = useState(false)
   const [stackImages, setStackImages] = useState<string[][]>([[], [], [], []])
+  const [activeLine, setActiveLine] = useState(0)
+
+  const cinematicLines = [
+    "Code is poetry. Infrastructure is art.",
+    "Building beautiful things quietly.",
+    "I romanticize the future and build pieces of it in the dark.",
+    "Machines obey logic. Humans don't. That's why both fascinate me.",
+    "Some men inherit empires. I build mine from circuitry and sleepless nights.",
+    "Elegant chaos in a black hoodie.",
+    "By day, I build systems. By night, I chase impossible ideas.",
+    "Not everything I build is code. Some things are meant to be felt.",
+    "Too curious for ordinary things.",
+    "Built in silence. Driven by obsession.",
+    "Somewhere between poetry and machines.",
+    "The future has always fascinated me more than the present.",
+    "I build things that feel like tomorrow.",
+    "A mind too loud for ordinary ambitions.",
+    "Every system tells a story.",
+    "Luxury isn't gold. It's precision.",
+    "I like impossible problems.",
+    "Dark rooms. Bright ideas.",
+    "Engineering with cinematic intent.",
+    "Obsessed with things that shouldn't work.",
+    "Quiet people build loud futures.",
+    "Ambition dressed as elegance.",
+    "The best ideas arrive after midnight.",
+    "Disruption is the only constant.",
+    "Beautiful things are engineered twice.",
+    "Precision is a form of luxury.",
+    "I don't chase trends. I chase permanence.",
+    "Every empire starts as an idea nobody believed in.",
+    "Built from caffeine and impossible standards.",
+    "Dreaming in systems and skylines.",
+    "I prefer depth over noise.",
+    "The aesthetic matters.",
+    "Technology should feel cinematic.",
+    "I build things I'd want to exist.",
+    "Quiet ambition is still ambition.",
+    "The mind never really sleeps.",
+    "I admire elegant systems.",
+    "Art disguised as engineering.",
+    "Nothing great was ever built comfortably.",
+    "A little obsessed with the future.",
+    "Ideas deserve beautiful execution.",
+    "The details are everything.",
+    "Thinking beyond the obvious.",
+    "Built with intent.",
+    "Future-first. Always.",
+    "There is poetry in precision.",
+  ]
 
   // Fetch gallery images from Supabase (if configured). If Supabase is not
   // available (missing NEXT_PUBLIC_SUPABASE_KEY), fall back to static images
@@ -128,6 +178,15 @@ export default function Hero() {
     setMounted(true)
     return () => setMounted(false)
   }, [])
+
+  // Rotating cinematic quotes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveLine((prev) => (prev + 1) % cinematicLines.length)
+    }, 3500)
+
+    return () => clearInterval(interval)
+  }, [cinematicLines.length])
 
   // GSAP ScrollTrigger animations
   useEffect(() => {
@@ -267,15 +326,33 @@ export default function Hero() {
               <span className={styles.pulseRingRed}></span>
             </div>
               
-            {/* Badass Quote */}
-            <div className="glass-card-gold rounded-2xl p-6 w-full max-w-4xl mx-auto">
-              <p className="text-xl text-gold italic leading-relaxed text-center">
-                "Code is poetry, infrastructure is art,<br />
-                and disruption is the only constant."
-              </p>
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-blood-red"></div>
-                <span className="text-sm text-gray-400">Always Shipping</span>
+            {/* Cinematic Rotating Quote */}
+            <div className="glass-card-gold rounded-3xl p-8 md:p-10 w-full max-w-5xl mx-auto overflow-hidden relative border border-yellow-500/10">
+              {/* Animated glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,200,0,0.08),transparent_70%)] animate-pulse" />
+
+              {/* Floating blur orb */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/10 blur-3xl rounded-full" />
+
+              {/* Quote */}
+              <div className="relative h-[90px] flex items-center justify-center">
+                <p
+                  key={activeLine}
+                  className="text-center text-gold italic text-xl md:text-3xl leading-relaxed px-4 animate-cinematicQuote"
+                >
+                  "{cinematicLines[activeLine]}"
+                </p>
+              </div>
+
+              {/* Bottom detail */}
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+
+                <span className="text-xs uppercase tracking-[0.3em] text-gray-400">
+                  Always Building
+                </span>
+
+                <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
               </div>
             </div>
               

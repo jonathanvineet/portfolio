@@ -578,3 +578,34 @@ button, a {
 .animate-pulse {
   animation: pulse 2s infinite;
 }
+
+/* Cinematic Quote Animation */
+@keyframes cinematicQuote {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    filter: blur(10px);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+    filter: blur(0px);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+    filter: blur(0px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(1.02);
+    filter: blur(10px);
+  }
+}
+
+.animate-cinematicQuote {
+  animation: cinematicQuote 3.5s ease-in-out forwards;
+}
