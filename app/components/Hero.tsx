@@ -314,8 +314,8 @@ export default function Hero() {
                       With expertise spanning from hardware design to software architecture, I build solutions that make a difference.
                     </p>
                     <p className="text-gray-400 leading-relaxed mb-6">
-                      When I'm not coding or building, you'll find me exploring photography, writing poetry, or diving deep into 
-                      the latest technological advances. Every project is an opportunity to learn, create, and push boundaries.
+                      Half engineer.
+Half insomniac dream stitched together with ambition.
                     </p>
                     <div className="flex items-center justify-center lg:justify-start gap-2">
                       <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-blood-red"></div>
