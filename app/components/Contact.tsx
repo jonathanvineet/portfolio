@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Code, Link2, Share2 } from 'lucide-react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -108,7 +108,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-gold/5 transition-all duration-300 group"
               >
-                <Github className="w-8 h-8 text-gray-400 group-hover:text-gold transition-colors mb-2" />
+                <Code className="w-8 h-8 text-gray-400 group-hover:text-gold transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-gold transition-colors">GitHub</span>
               </a>
 
@@ -118,7 +118,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 group"
               >
-                <Linkedin className="w-8 h-8 text-gray-400 group-hover:text-blue-400 transition-colors mb-2" />
+                <Link2 className="w-8 h-8 text-gray-400 group-hover:text-blue-400 transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-blue-400 transition-colors">LinkedIn</span>
               </a>
 
@@ -128,7 +128,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all duration-300 group"
               >
-                <Twitter className="w-8 h-8 text-gray-400 group-hover:text-sky-400 transition-colors mb-2" />
+                <Share2 className="w-8 h-8 text-gray-400 group-hover:text-sky-400 transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-sky-400 transition-colors">X / Twitter</span>
               </a>
             </div>
