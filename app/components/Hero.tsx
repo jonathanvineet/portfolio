@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from '../../styles/Hero.module.css'
-import Stack from './Stack'
+import CircularGallery from './CircularGallery'
 import { supabase } from '../lib/supabaseClient'
 
 // Register ScrollTrigger plugin
@@ -16,7 +16,6 @@ if (typeof window !== 'undefined') {
 export default function Hero() {
   const [galleryItems, setGalleryItems] = useState<{ image: string; text: string }[]>([])
   const [mounted, setMounted] = useState(false)
-  const [stackImages, setStackImages] = useState<string[][]>([[], [], [], []])
   const [activeLine, setActiveLine] = useState(0)
 
   const cinematicLines = [
@@ -82,7 +81,6 @@ export default function Hero() {
       // eslint-disable-next-line no-console
       console.warn('Supabase client not available; using static gallery fallback.')
       setGalleryItems(staticFallback)
-      distributeImages(staticFallback.map(item => item.image))
       return
     }
 
@@ -92,7 +90,6 @@ export default function Hero() {
         if (!client) {
           console.warn('Supabase client not available; using static gallery fallback.')
           setGalleryItems(staticFallback)
-          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -107,7 +104,6 @@ export default function Hero() {
         if (error) {
           console.error('Error loading images from Supabase:', error)
           setGalleryItems(staticFallback)
-          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -116,7 +112,6 @@ export default function Hero() {
         if (!data || data.length === 0) {
           console.warn('No images found in Supabase bucket — using fallback')
           setGalleryItems(staticFallback)
-          distributeImages(staticFallback.map(item => item.image))
           return
         }
 
@@ -137,42 +132,14 @@ export default function Hero() {
 
         console.log(`Gallery loaded with ${urls.length} images`)
         setGalleryItems(urls)
-        distributeImages(urls.map(item => item.image))
       } catch (err) {
         console.error('Unexpected error fetching images:', err)
         setGalleryItems(staticFallback)
-        distributeImages(staticFallback.map(item => item.image))
       }
     }
 
     fetchImages()
   }, [])
-
-  // Distribute images across 4 stacks ensuring no duplicates
-  const distributeImages = (images: string[]) => {
-    const minImagesPerStack = 4
-    const totalNeeded = minImagesPerStack * 4
-
-    // Ensure we have enough images
-    if (images.length < totalNeeded) {
-      console.warn(`Not enough images (${images.length}), need at least ${totalNeeded}`)
-      // If not enough images, repeat the available ones
-      while (images.length < totalNeeded) {
-        images = [...images, ...images].slice(0, totalNeeded)
-      }
-    }
-
-    // Shuffle images to randomize distribution
-    const shuffled = [...images].sort(() => Math.random() - 0.5)
-    
-    // Distribute evenly across 4 stacks
-    const stacks: string[][] = [[], [], [], []]
-    shuffled.forEach((img, index) => {
-      stacks[index % 4].push(img)
-    })
-
-    setStackImages(stacks)
-  }
 
   useEffect(() => {
     setMounted(true)
@@ -403,99 +370,19 @@ Half insomniac dream stitched together with ambition.
                 </div>
               </div>
 
-              {/* 4 Stack Components - Right Side (60%) in 2x2 Grid */}
+              {/* Circular Gallery - Right Side (60%) */}
               <div 
                 className="w-full lg:w-[60%] scroll-animate"
                 data-animation="slide-right"
               >
-                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-                  {/* Stack 1 - Top Left */}
-                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
-                    {stackImages[0].length > 0 && (
-                      <Stack
-                        randomRotation
-                        sensitivity={200}
-                        sendToBackOnClick={true}
-                        cards={stackImages[0].map((src, i) => (
-                          <img 
-                            key={i} 
-                            src={src} 
-                            alt={`stack1-card-${i + 1}`} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                          />
-                        ))}
-                        autoplay
-                        autoplayDelay={3000}
-                        pauseOnHover={false}
-                      />
-                    )}
-                  </div>
-
-                  {/* Stack 2 - Top Right */}
-                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
-                    {stackImages[1].length > 0 && (
-                      <Stack
-                        randomRotation
-                        sensitivity={200}
-                        sendToBackOnClick={true}
-                        cards={stackImages[1].map((src, i) => (
-                          <img 
-                            key={i} 
-                            src={src} 
-                            alt={`stack2-card-${i + 1}`} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                          />
-                        ))}
-                        autoplay
-                        autoplayDelay={3200}
-                        pauseOnHover={false}
-                      />
-                    )}
-                  </div>
-
-                  {/* Stack 3 - Bottom Left */}
-                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
-                    {stackImages[2].length > 0 && (
-                      <Stack
-                        randomRotation
-                        sensitivity={200}
-                        sendToBackOnClick={true}
-                        cards={stackImages[2].map((src, i) => (
-                          <img 
-                            key={i} 
-                            src={src} 
-                            alt={`stack3-card-${i + 1}`} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                          />
-                        ))}
-                        autoplay
-                        autoplayDelay={3400}
-                        pauseOnHover={false}
-                      />
-                    )}
-                  </div>
-
-                  {/* Stack 4 - Bottom Right */}
-                  <div className="w-full" style={{ height: 'clamp(200px, 25vw, 320px)' }}>
-                    {stackImages[3].length > 0 && (
-                      <Stack
-                        randomRotation
-                        sensitivity={200}
-                        sendToBackOnClick={true}
-                        cards={stackImages[3].map((src, i) => (
-                          <img 
-                            key={i} 
-                            src={src} 
-                            alt={`stack4-card-${i + 1}`} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                          />
-                        ))}
-                        autoplay
-                        autoplayDelay={3600}
-                        pauseOnHover={false}
-                      />
-                    )}
-                  </div>
+                <div style={{ height: '600px', position: 'relative' }}>
+                  <CircularGallery 
+                    items={galleryItems}
+                    bend={3} 
+                    textColor="#ffffff" 
+                    borderRadius={0.05} 
+                    scrollEase={0.02}
+                  />
                 </div>
               </div>
             </div>
