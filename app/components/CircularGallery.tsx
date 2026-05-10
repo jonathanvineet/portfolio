@@ -332,6 +332,8 @@ class Media {
 class App {
   container: any;
   scrollSpeed: number;
+  autoPlay: boolean;
+  autoPlaySpeed: number;
   scroll: any;
   onCheckDebounce: any;
   renderer: any;
@@ -361,12 +363,16 @@ class App {
       borderRadius = 0,
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
-      scrollEase = 0.05
+      scrollEase = 0.05,
+      autoPlay = false,
+      autoPlaySpeed = 0.5
     }: any = {}
   ) {
     document.documentElement.classList.remove('no-js');
     this.container = container;
     this.scrollSpeed = scrollSpeed;
+    this.autoPlay = autoPlay;
+    this.autoPlaySpeed = autoPlaySpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
     this.isDown = false;
@@ -500,6 +506,11 @@ class App {
   }
 
   update = () => {
+    // Auto-scroll when autoPlay is enabled and user is not interacting
+    if (this.autoPlay && !this.isDown) {
+      this.scroll.target += this.autoPlaySpeed;
+    }
+    
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
@@ -551,7 +562,9 @@ export default function CircularGallery({
   borderRadius = 0.05,
   font = 'bold 30px Figtree',
   scrollSpeed = 2,
-  scrollEase = 0.05
+  scrollEase = 0.05,
+  autoPlay = false,
+  autoPlaySpeed = 0.5
 }: {
   items?: { image: string; text: string }[];
   bend?: number;
@@ -560,16 +573,18 @@ export default function CircularGallery({
   font?: string;
   scrollSpeed?: number;
   scrollEase?: number;
+  autoPlay?: boolean;
+  autoPlaySpeed?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase });
+    const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, autoPlay, autoPlaySpeed });
     return () => {
       app.destroy();
     };
-  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, autoPlay, autoPlaySpeed]);
 
   return <div className="circular-gallery" ref={containerRef} />;
 }

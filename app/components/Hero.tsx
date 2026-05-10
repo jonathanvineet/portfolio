@@ -375,13 +375,15 @@ Half insomniac dream stitched together with ambition.
                 className="w-full lg:w-[60%] scroll-animate"
                 data-animation="slide-right"
               >
-                <div style={{ height: '600px', position: 'relative' }}>
+                <div style={{ height: '400px', position: 'relative', marginTop: '-80px' }}>
                   <CircularGallery 
                     items={galleryItems}
                     bend={3} 
                     textColor="#ffffff" 
                     borderRadius={0.05} 
                     scrollEase={0.02}
+                    autoPlay={true}
+                    autoPlaySpeed={0.5}
                   />
                 </div>
               </div>
