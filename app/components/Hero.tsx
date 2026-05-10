@@ -72,8 +72,8 @@ export default function Hero() {
   // bundled with the site so the Hero still renders during development.
   useEffect(() => {
     const staticFallback = [
-      { image: '/assets/IMG_4654.jpeg', text: 'Adventure' },
-      { image: '/assets/IMG_6508.jpeg', text: 'Tech Life' },
+      { image: '/assets/IMG_4654.jpeg', text: '' },
+      { image: '/assets/IMG_6508.jpeg', text: '' },
     ]
 
     if (!supabase) {
@@ -125,7 +125,7 @@ export default function Hero() {
 
             return {
               image: urlData.publicUrl,
-              text: item.name.split('.')[0], // Use filename as label
+              text: '', // No label text
             }
           })
         )
