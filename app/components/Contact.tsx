@@ -1,33 +1,93 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Code, Link2, Share2 } from 'lucide-react'
+import { Mail, Phone, MapPin, Code, Link2, Share2, AlertCircle, CheckCircle } from 'lucide-react'
+
+interface FormData {
+  name: string
+  email: string
+  message: string
+}
+
+interface FormStatus {
+  type: 'idle' | 'loading' | 'success' | 'error'
+  message?: string
+}
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: ''
   })
 
   const [focusedField, setFocusedField] = useState<string | null>(null)
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => {
-      setFormData({ name: '', email: '', message: '' })
-      setSubmitted(false)
-    }, 2000)
-  }
+  const [formStatus, setFormStatus] = useState<FormStatus>({ type: 'idle' })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // Validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setFormStatus({
+        type: 'error',
+        message: 'Please fill in all fields'
+      })
+      return
+    }
+
+    if (formData.message.length < 10) {
+      setFormStatus({
+        type: 'error',
+        message: 'Message must be at least 10 characters long'
+      })
+      return
+    }
+
+    setFormStatus({ type: 'loading' })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setFormStatus({
+          type: 'success',
+          message: 'Message sent successfully! I\'ll get back to you soon.'
+        })
+        setFormData({ name: '', email: '', message: '' })
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setFormStatus({ type: 'idle' })
+        }, 5000)
+      } else {
+        setFormStatus({
+          type: 'error',
+          message: data.error || 'Failed to send message. Please try again.'
+        })
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setFormStatus({
+        type: 'error',
+        message: 'An error occurred. Please try again later.'
+      })
+    }
   }
 
   return (
@@ -149,6 +209,36 @@ export default function Contact() {
           <h2 className="text-2xl text-gold mb-8 font-bold">Send me a Message</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Status Messages */}
+            {formStatus.type !== 'idle' && (
+              <div className={`flex items-start gap-3 p-4 rounded-lg ${
+                formStatus.type === 'success' 
+                  ? 'bg-green-500/10 border border-green-500/30' 
+                  : formStatus.type === 'error'
+                  ? 'bg-red-500/10 border border-red-500/30'
+                  : 'bg-blue-500/10 border border-blue-500/30'
+              }`}>
+                {formStatus.type === 'success' && (
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                )}
+                {formStatus.type === 'error' && (
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                )}
+                {formStatus.type === 'loading' && (
+                  <div className="w-5 h-5 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin flex-shrink-0" />
+                )}
+                <p className={`text-sm ${
+                  formStatus.type === 'success'
+                    ? 'text-green-300'
+                    : formStatus.type === 'error'
+                    ? 'text-red-300'
+                    : 'text-blue-300'
+                }`}>
+                  {formStatus.message}
+                </p>
+              </div>
+            )}
+
             {/* Name Input */}
             <div>
               <label 
@@ -165,8 +255,9 @@ export default function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('name')}
                 onBlur={() => setFocusedField(null)}
+                disabled={formStatus.type === 'loading'}
                 required
-                className={`glass-input w-full transition-all ${focusedField === 'name' ? 'ring-2 ring-gold border-gold' : ''}`}
+                className={`glass-input w-full transition-all disabled:opacity-50 disabled:cursor-not-allowed ${focusedField === 'name' ? 'ring-2 ring-gold border-gold' : ''}`}
                 placeholder="Your name"
               />
             </div>
@@ -187,8 +278,9 @@ export default function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('email')}
                 onBlur={() => setFocusedField(null)}
+                disabled={formStatus.type === 'loading'}
                 required
-                className={`glass-input w-full transition-all ${focusedField === 'email' ? 'ring-2 ring-gold border-gold' : ''}`}
+                className={`glass-input w-full transition-all disabled:opacity-50 disabled:cursor-not-allowed ${focusedField === 'email' ? 'ring-2 ring-gold border-gold' : ''}`}
                 placeholder="your.email@example.com"
               />
             </div>
@@ -208,9 +300,10 @@ export default function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('message')}
                 onBlur={() => setFocusedField(null)}
+                disabled={formStatus.type === 'loading'}
                 required
                 rows={6}
-                className={`glass-input w-full resize-none transition-all ${focusedField === 'message' ? 'ring-2 ring-gold border-gold' : ''}`}
+                className={`glass-input w-full resize-none transition-all disabled:opacity-50 disabled:cursor-not-allowed ${focusedField === 'message' ? 'ring-2 ring-gold border-gold' : ''}`}
                 placeholder="Tell me about your project or idea..."
               />
             </div>
@@ -218,10 +311,10 @@ export default function Contact() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={submitted}
-              className="w-full glass-button bg-gradient-to-r from-blood-red/20 to-gold/20 border-blood-red text-white font-semibold text-lg hover:from-blood-red/40 hover:to-gold/40 transition-all disabled:opacity-50"
+              disabled={formStatus.type === 'loading'}
+              className="w-full glass-button bg-gradient-to-r from-blood-red/20 to-gold/20 border-blood-red text-white font-semibold text-lg hover:from-blood-red/40 hover:to-gold/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitted ? '✓ Message Sent!' : 'Send Message'}
+              {formStatus.type === 'loading' ? 'Sending...' : 'Send Message'}
             </button>
           </form>
 
