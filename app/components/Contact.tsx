@@ -193,15 +193,6 @@ export default function Contact() {
               </a>
             </div>
           </div>
-
-          {/* Response Time */}
-          <div className="glass-card rounded-2xl p-6 bg-gradient-to-br from-gold/10 to-red-500/10 border border-gold/20">
-            <p className="text-sm text-gray-300">
-              <span className="text-gold font-semibold">⚡ Quick Response</span>
-              <br />
-              I typically respond within 24 hours. For urgent matters, feel free to call or use WhatsApp.
-            </p>
-          </div>
         </div>
 
         {/* Contact Form - Right Side */}
