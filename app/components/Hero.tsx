@@ -383,7 +383,7 @@ Half insomniac dream stitched together with ambition.
                     borderRadius={0.05} 
                     scrollEase={0.02}
                     autoPlay={true}
-                    autoPlaySpeed={0.15}
+                    autoPlaySpeed={0.05}
                   />
                 </div>
               </div>
