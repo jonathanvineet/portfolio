@@ -81,14 +81,14 @@ export default function Poetry() {
         ) : poems.length === 0 ? (
           <div className="text-center text-gray-400 py-20">No poems found yet.</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8 justify-items-center">
             {poems.map((poem) => {
               const imageUrl = getImageUrl(poem.image_name)
               
               return (
-                <div
+                  <div
                   key={poem.id}
-                  className="w-[200px] h-[300px] relative rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl glass-card"
+                  className="w-[280px] h-[340px] relative rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl glass-card"
                   onClick={() => setSelectedPoem(poem)}
                 >
                   {/* Main background image - full card */}
