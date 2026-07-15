@@ -17,6 +17,7 @@ const SERVICES = [
     title: 'IoT & Embedded Systems',
     icon: Cpu,
     color: 'red',
+    image: '/assets/electrical.jpg',
     description: 'Custom IoT solutions from embedded systems to smart automation.',
     pricing: [
       ['Starter', '₹5,000 – ₹15,000'],
@@ -31,6 +32,7 @@ const SERVICES = [
     title: '3D Printing Services',
     icon: Box,
     color: 'yellow',
+    image: '/assets/3dprinting.jpg',
     description: 'Professional 3D printing for prototypes, collectibles, decor, cosplay and custom parts.',
     pricing: [
       ['Small Prints', '₹150 – ₹500'],
@@ -46,6 +48,7 @@ const SERVICES = [
     title: 'Web & App Development',
     icon: Code2,
     color: 'yellow',
+    image: '/assets/code.jpg',
     description: 'Modern web apps, portfolios, dashboards and AI-powered platforms.',
     pricing: [
       ['Landing Pages', '₹8,000 – ₹20,000'],
@@ -120,8 +123,12 @@ export default function ServicesPage() {
 
   return (
     <main className="min-h-screen bg-black relative overflow-x-hidden">
-      {/* Enhanced background with moving gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-black via-slate-900 to-black opacity-60" />
+      {/* Background image with dark overlay */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: "url('/assets/servicesbg.jpg')" }}
+      />
+      <div className="fixed inset-0 bg-black/70" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(250,204,21,0.05),rgba(0,0,0,0))]" />
 
       <div className="relative z-10 container mx-auto px-4 md:px-6 py-16 md:py-24">
@@ -162,7 +169,20 @@ export default function ServicesPage() {
                 <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl ${colors.glow}`} />
 
                 {/* Card */}
-                <div className="relative bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 h-full flex flex-col hover:border-white/20 transition-all duration-300">
+                <div className="relative overflow-hidden bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-2xl h-full hover:border-white/20 transition-all duration-300">
+                  {/* Card background image */}
+                  {service.image && (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url('${service.image}')` }}
+                    />
+                  )}
+                  {/* Dark overlay for readability */}
+                  <div className="absolute inset-0 bg-black/70" />
+
+                  {/* Content */}
+                  <div className="relative z-10 p-6 md:p-8 h-full flex flex-col">
+
                   {/* Icon with animation */}
                   <motion.div
                     className="flex items-center justify-center mb-6"
@@ -233,6 +253,7 @@ export default function ServicesPage() {
                         Visit DreamForge →
                       </a>
                     )}
+                  </div>
                   </div>
                 </div>
               </motion.div>
