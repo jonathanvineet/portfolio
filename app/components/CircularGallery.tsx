@@ -348,6 +348,7 @@ class App {
   isDown: boolean;
   start: number;
   raf: number;
+  lastTime: number;
   boundOnResize: any;
   boundOnWheel: any;
   boundOnTouchDown: any;
@@ -378,6 +379,7 @@ class App {
     this.isDown = false;
     this.start = 0;
     this.raf = 0;
+    this.lastTime = 0;
     this.mediasImages = [];
     this.medias = [];
     this.createRenderer();
@@ -505,13 +507,21 @@ class App {
     }
   }
 
-  update = () => {
+  update = (time: number = 0) => {
+    // Normalize movement to elapsed time so speed stays constant regardless
+    // of frame-rate jitter (previously a fixed per-frame step, which looked
+    // like uneven/stuttering rotation whenever the frame rate wavered).
+    const delta = this.lastTime ? time - this.lastTime : 16.67;
+    this.lastTime = time;
+    const dtScale = Math.min(delta, 100) / 16.67;
+
     // Auto-scroll when autoPlay is enabled and user is not interacting
     if (this.autoPlay && !this.isDown) {
-      this.scroll.target += this.autoPlaySpeed;
+      this.scroll.target += this.autoPlaySpeed * dtScale;
     }
-    
-    this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+
+    const ease = 1 - Math.pow(1 - this.scroll.ease, dtScale);
+    this.scroll.current = lerp(this.scroll.current, this.scroll.target, ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
       this.medias.forEach(media => media.update(this.scroll, direction));

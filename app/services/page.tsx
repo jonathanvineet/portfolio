@@ -256,16 +256,7 @@ export default function ServicesPage() {
           </p>
 
           <div className="max-w-6xl mx-auto">
-            <Masonry
-              items={printing3DImages}
-              ease="power3.out"
-              duration={0.6}
-              stagger={0.08}
-              animateFrom="bottom"
-              scaleOnHover={true}
-              hoverScale={1.05}
-              blurToFocus={true}
-            />
+            <Masonry items={printing3DImages} scaleOnHover hoverScale={1.05} />
           </div>
         </motion.div>
       </div>

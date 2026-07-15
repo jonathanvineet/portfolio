@@ -210,10 +210,16 @@ function StoryOverlay({ progress }: { progress: number }) {
   )
 }
 
+// ─── Persisted scroll progress ────────────────────────────────────────────────
+// Kept at module scope so it survives unmount/remount of ThreeBackground when
+// navigating away to /vinee/photography, /vinee/poetry, etc. and back — the
+// camera resumes where the user left it instead of resetting to the start.
+let savedScrollProgress = 0
+
 // ─── Camera driver ────────────────────────────────────────────────────────────
 function CameraDriver({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
   const { camera } = useThree()
-  const smoothP = useRef(0)
+  const smoothP = useRef(progressRef.current)
 
   useFrame(() => {
     smoothP.current += (progressRef.current - smoothP.current) * 0.03
@@ -254,8 +260,8 @@ function BatcaveScene() {
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 export default function ThreeBackground() {
-  const progressRef = useRef(0)
-  const [displayProgress, setDisplayProgress] = useState(0)
+  const progressRef = useRef(savedScrollProgress)
+  const [displayProgress, setDisplayProgress] = useState(savedScrollProgress)
   const ghostRef = useRef<HTMLDivElement>(null)
 
   // Throttle React state updates to ~60fps with rAF to avoid jank
@@ -271,12 +277,22 @@ export default function ThreeBackground() {
       if (max <= 0) return
       const raw = scrollTop / max
       progressRef.current = raw
+      savedScrollProgress = raw
 
       if (rafId.current !== null) return
       rafId.current = requestAnimationFrame(() => {
         setDisplayProgress(progressRef.current)
         rafId.current = null
       })
+    }
+
+    // Restore the ghost scroller to where the user left off, so re-entering
+    // this page (e.g. from /vinee/poetry) resumes the camera position
+    // instead of snapping back to the start.
+    const { scrollHeight, clientHeight } = el
+    const max = scrollHeight - clientHeight
+    if (max > 0) {
+      el.scrollTop = savedScrollProgress * max
     }
 
     el.addEventListener('scroll', onScroll, { passive: true })

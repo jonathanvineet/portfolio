@@ -34,7 +34,9 @@ section {
   min-height: 100vh;
 }
 
-/* Skills background animated diagonal icon tracks */
+/* Skills background: diagonal rows of tech icons, each row drifting
+   independently so the whole field feels like it's breathing rather than
+   scrolling on rigid rails. */
 .skills-bg-logoloop {
   position: fixed;
   inset: 0;
@@ -49,80 +51,26 @@ section {
 
 .skills-bg-logoloop .logoloop__node {
   transform: rotate(45deg);
-  color: rgba(255,255,255,0.95);
+  color: rgba(255, 255, 255, 0.95);
 }
 
-/* Legacy icon track styles - can be removed if not used elsewhere */
-.skills-bg {
-  position: absolute;
-  inset: 0; /* cover the entire section */
-  height: 100%;
-  width: 160%;
-  left: 50%;
-  transform: translateX(-50%) rotate(-45deg); /* diagonal sweep at 45deg */
-  z-index: 0;
-  overflow: visible;
+/* Gentle vertical bob layered on top of each row's horizontal scroll —
+   amplitude/duration/delay are randomized per row via inline CSS vars. */
+.skills-bg-row {
+  animation: skills-row-float var(--float-duration, 9s) ease-in-out infinite alternate;
+  animation-delay: var(--float-delay, 0s);
 }
 
-
-
-.icon-track {
-  position: absolute;
-  left: -10%;
-  width: 220%;
-  padding: 0.3rem 0;
-  opacity: 0.25;
-  filter: blur(0.1px) saturate(130%);
-  will-change: transform;
-  top: var(--offsetY, 0%); /* use per-track offset to distribute vertically */
-}
-
-.icon-track .track-inner {
-  display: flex;
-  gap: 1.5rem;
-  width: 300%; /* three copies laid out horizontally */
-  align-items: center;
-}
-
-.icon-track .track-row {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.icon-item {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.95);
-  flex: 0 0 auto;
-}
-
-/* SVG icons are counter-rotated so they appear straight when the background is tilted */
-.icon-svg { width: 20px; height: 20px; color: rgba(255,255,255,0.95); opacity: 0.95; transform: rotate(45deg); }
-
-/* per-track transforms: use CSS vars set inline for duration and vertical offset */
-.icon-track { transform: translateY(var(--offsetY, 0%)); }
-.icon-track.track-left .track-inner { animation: slide-left var(--duration, 48s) linear infinite; animation-delay: var(--delay, 0s); }
-.icon-track.track-right .track-inner { animation: slide-right var(--duration, 56s) linear infinite; animation-delay: var(--delay, 0s); }
-
-@keyframes slide-left {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-33.333%); }
-}
-
-@keyframes slide-right {
-  0% { transform: translateX(-33.333%); }
-  100% { transform: translateX(0%); }
+@keyframes skills-row-float {
+  0% { transform: translateY(calc(var(--float-offset, 12px) * -1)); }
+  100% { transform: translateY(var(--float-offset, 12px)); }
 }
 
 /* ensure Skills content is above background */
 .min-h-screen > .max-w-5xl, .min-h-screen > h2 { z-index: 5; position: relative; }
 
 @media (prefers-reduced-motion: reduce) {
-  .icon-track .track-inner { animation: none !important; }
+  .skills-bg-row { animation: none !important; }
 }
 
 /* Responsive Typography using clamp() */

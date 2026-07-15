@@ -77,21 +77,45 @@ export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null)
   const skillRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  // Tech logos for background animation - memoized to prevent recreation on re-renders
+  // Tech logos for background animation - memoized to prevent recreation on re-renders.
+  // A much bigger, more varied pool means adjacent rows rarely repeat the same
+  // sequence, so the diagonal field reads as dense and organic rather than a
+  // handful of icons looping in a visible pattern.
   const techLogos = useMemo(() => [
     { node: <SiIcons.SiReact />, title: "React" },
     { node: <SiIcons.SiNextdotjs />, title: "Next.js" },
     { node: <SiIcons.SiTypescript />, title: "TypeScript" },
+    { node: <SiIcons.SiJavascript />, title: "JavaScript" },
     { node: <SiIcons.SiTailwindcss />, title: "Tailwind" },
+    { node: <SiIcons.SiHtml5 />, title: "HTML5" },
+    { node: <SiIcons.SiCss3 />, title: "CSS3" },
+    { node: <SiIcons.SiVite />, title: "Vite" },
     { node: <SiIcons.SiNodedotjs />, title: "Node.js" },
+    { node: <SiIcons.SiExpress />, title: "Express" },
+    { node: <SiIcons.SiFlask />, title: "Flask" },
     { node: <SiIcons.SiPython />, title: "Python" },
+    { node: <SiIcons.SiC />, title: "C" },
+    { node: <SiIcons.SiCplusplus />, title: "C++" },
+    { node: <SiIcons.SiOpenjdk />, title: "Java" },
     { node: <SiIcons.SiDocker />, title: "Docker" },
     { node: <SiIcons.SiAmazon />, title: "AWS" },
     { node: <SiIcons.SiGithub />, title: "GitHub" },
+    { node: <SiIcons.SiGit />, title: "Git" },
     { node: <SiIcons.SiGraphql />, title: "GraphQL" },
+    { node: <SiIcons.SiMysql />, title: "MySQL" },
     { node: <SiIcons.SiPostgresql />, title: "PostgreSQL" },
     { node: <SiIcons.SiMongodb />, title: "MongoDB" },
-    { node: <SiIcons.SiGit />, title: "Git" },
+    { node: <SiIcons.SiSupabase />, title: "Supabase" },
+    { node: <SiIcons.SiFirebase />, title: "Firebase" },
+    { node: <SiIcons.SiEthereum />, title: "Ethereum" },
+    { node: <SiIcons.SiSolana />, title: "Solana" },
+    { node: <SiIcons.SiSolidity />, title: "Solidity" },
+    { node: <SiIcons.SiOpenai />, title: "OpenAI" },
+    { node: <SiIcons.SiOpencv />, title: "OpenCV" },
+    { node: <SiIcons.SiArduino />, title: "Arduino" },
+    { node: <SiIcons.SiEspressif />, title: "ESP32" },
+    { node: <SiIcons.SiRaspberrypi />, title: "Raspberry Pi" },
+    { node: <SiIcons.SiSocketdotio />, title: "Websockets" },
   ], [])
 
   // Map skill names to icons for the tech-stack chips - memoized
@@ -173,42 +197,57 @@ export default function Skills() {
       {showLogoLoops && (
         <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
           {(() => {
-            const totalTracks = 12 // Further reduced from 20 to 12 for faster compilation
-            const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135]
+            const totalTracks = 18 // denser field of icons
+            const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 115, 88, 142, 102, 128, 92]
 
             return Array.from({ length: totalTracks }).map((_, trackIdx) => {
               const direction = trackIdx % 2 === 0 ? 'left' : 'right'
               const speed = speedVariants[trackIdx % speedVariants.length]
               // span offsets smoothly from -140% down to +140% so rows cover entire height (and a bit beyond)
               const offsetY = Math.round(-140 + (trackIdx / (totalTracks - 1)) * 280)
+              // Rotate each row's slice of the logo pool so neighboring rows
+              // don't show the same icons in the same order.
+              const rotation = (trackIdx * 7) % techLogos.length
+              const rowLogos = [...techLogos.slice(rotation), ...techLogos.slice(0, rotation)]
+              // Per-row size/opacity/float variance for a more organic, less
+              // uniform-grid feel.
+              const logoHeight = 24 + ((trackIdx * 5) % 20)
+              const opacity = 0.1 + ((trackIdx * 3) % 10) / 60
+              const floatOffset = 8 + ((trackIdx * 11) % 18)
+              const floatDuration = 7 + ((trackIdx * 4) % 10)
+              const floatDelay = -((trackIdx * 2) % floatDuration)
 
               return (
                 <div
                   key={`logoloop-${trackIdx}`}
+                  className="skills-bg-row"
                   style={{
                     position: 'absolute',
                     top: `${offsetY}%`,
                     left: 0,
                     width: '100%',
-                    opacity: 0.15,
+                    opacity,
                     overflow: 'hidden',
+                    ['--float-offset' as string]: `${floatOffset}px`,
+                    ['--float-duration' as string]: `${floatDuration}s`,
+                    ['--float-delay' as string]: `${floatDelay}s`,
                   }}
                 >
                   <LogoLoop
-                    logos={techLogos}
+                    logos={rowLogos}
                     speed={speed}
                     direction={direction}
-                    logoHeight={32}
-                  gap={40}
-                  hoverSpeed={speed}
-                  fadeOut={false}
-                  ariaLabel={`Tech logos row ${trackIdx + 1}`}
-                />
-              </div>
-            )
-          })
-        })()}
-      </div>
+                    logoHeight={logoHeight}
+                    gap={40}
+                    hoverSpeed={speed}
+                    fadeOut={false}
+                    ariaLabel={`Tech logos row ${trackIdx + 1}`}
+                  />
+                </div>
+              )
+            })
+          })()}
+        </div>
       )}
 
       {/* Fixed glass panel background - independent layer */}
