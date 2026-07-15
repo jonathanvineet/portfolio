@@ -36,7 +36,17 @@ export default function ProjectCard({
         </div>
         
         <div className={styles.cardImage}>
-          {imageUrl && <img src={imageUrl} alt={title} className={styles.projectImage} />}
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={title}
+              className={styles.projectImage}
+              onError={(e) => {
+                e.currentTarget.onerror = null
+                e.currentTarget.src = '/assets/software.jpg'
+              }}
+            />
+          )}
         </div>
         
         <div className={styles.glass}></div>

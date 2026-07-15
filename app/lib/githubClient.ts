@@ -71,7 +71,6 @@ export async function fetchGitHubRepos(
  * Transform GitHub repository data to project format
  */
 export function transformRepoToProject(repo: GitHubRepo): Project {
-  // Get image URL from topics or use language-based default
   const imageUrl = getProjectImage(repo)
   
   return {
@@ -91,48 +90,55 @@ export function transformRepoToProject(repo: GitHubRepo): Project {
   }
 }
 
+// Dark, on-brand gradient pairs to pick from — avoids relying on external
+// screenshot services (e.g. GitHub's OG images), which render a bright
+// white card with baked-in text that clashes with the site's dark theme.
+const GRADIENT_PALETTES: [string, string][] = [
+  ['#0b0f1a', '#0f3a4d'],
+  ['#0e0b1a', '#2a1240'],
+  ['#0f0a0a', '#3d1414'],
+  ['#0d0c08', '#3a2e08'],
+  ['#0a0f08', '#12331a'],
+  ['#12081a', '#3a1230'],
+  ['#080f0f', '#0d3330'],
+  ['#0f0b08', '#3a1f0a'],
+]
+
+function hashString(value: string): number {
+  let hash = 0
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash)
+}
+
 /**
- * Get project image based on language or topics
+ * Get a unique, deterministic image per repository. Instead of fetching a
+ * screenshot from an external service (unreliable and visually inconsistent
+ * with this site's dark theme), we render a small SVG gradient card as a
+ * data URI, seeded by the repo name so each project keeps a stable look.
  */
 function getProjectImage(repo: GitHubRepo): string {
-  // For now, return a solid black image or dark themed image
-  // You can replace this with your preferred project images
-  return '/assets/software.jpg' // Using the dark software.jpg image for all projects
-  
-  // Check for specific topics
-  const topics = repo.topics || []
-  
-  if (topics.includes('ai') || topics.includes('machine-learning') || topics.includes('ml')) {
-    return '/assets/software.jpg'
-  }
-  if (topics.includes('blockchain') || topics.includes('web3')) {
-    return '/assets/software.jpg'
-  }
-  if (topics.includes('iot') || topics.includes('hardware')) {
-    return '/assets/hardware.jpg'
-  }
-  
-  // Fallback to language-based images
-  const language = repo.language?.toLowerCase()
-  
-  switch (language) {
-    case 'javascript':
-    case 'typescript':
-      return '/assets/software.jpg'
-    case 'python':
-      return '/assets/software.jpg'
-    case 'java':
-      return '/assets/software.jpg'
-    case 'go':
-      return '/assets/software.jpg'
-    case 'rust':
-      return '/assets/software.jpg'
-    case 'c++':
-    case 'c':
-      return '/assets/software.jpg'
-    default:
-      return '/assets/software.jpg'
-  }
+  const seed = hashString(repo.name)
+  const [from, to] = GRADIENT_PALETTES[seed % GRADIENT_PALETTES.length]
+  const initial = repo.name.charAt(0).toUpperCase()
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+      <defs>
+        <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${from}" />
+          <stop offset="100%" stop-color="${to}" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="400" fill="url(#g)" />
+      <text x="50%" y="58%" text-anchor="middle" font-family="Arial, sans-serif"
+        font-size="180" font-weight="bold" fill="rgba(255,255,255,0.12)">${initial}</text>
+    </svg>
+  `.trim()
+
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 }
 
 /**
