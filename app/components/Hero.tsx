@@ -302,10 +302,10 @@ export default function Hero() {
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/10 blur-3xl rounded-full" />
 
               {/* Quote */}
-              <div className="relative h-[90px] flex items-center justify-center">
+              <div className="relative min-h-[70px] sm:min-h-[90px] flex items-center justify-center">
                 <p
                   key={activeLine}
-                  className="text-center text-gold italic text-xl md:text-3xl leading-relaxed px-4 animate-cinematicQuote"
+                  className="text-center text-gold italic text-base sm:text-xl md:text-3xl leading-relaxed px-4 animate-cinematicQuote"
                 >
                   "{cinematicLines[activeLine]}"
                 </p>
@@ -375,8 +375,8 @@ Half insomniac dream stitched together with ambition.
                 className="w-full lg:w-[60%] scroll-animate"
                 data-animation="slide-right"
               >
-                <div style={{ height: '400px', position: 'relative', marginTop: '-80px' }}>
-                  <CircularGallery 
+                <div className="mt-0 lg:-mt-20" style={{ height: 'clamp(260px, 60vw, 400px)', position: 'relative' }}>
+                  <CircularGallery
                     items={galleryItems}
                     bend={3} 
                     textColor="#ffffff" 

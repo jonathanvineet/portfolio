@@ -104,18 +104,24 @@ export default function ServicesPage() {
   }
 
   const getColorClasses = (color: string) => {
-    const colorMap: Record<string, { border: string; bg: string; text: string; glow: string }> = {
+    // Tailwind's JIT compiler only picks up class names that appear as
+    // literal strings in source, so every variant used by the icon wrapper
+    // below (from-*, to-*, border-*) must be spelled out here rather than
+    // built with template-string interpolation, or it gets purged at build time.
+    const colorMap: Record<string, { border: string; bg: string; text: string; glow: string; iconWrapper: string }> = {
       red: {
         border: 'border-red-500',
         bg: 'bg-red-500',
         text: 'text-red-400',
         glow: 'hover:shadow-[0_0_25px_rgba(239,68,68,0.25)]',
+        iconWrapper: 'bg-gradient-to-br from-red-500/20 to-red-500/5 border border-red-500/30 group-hover:border-red-500/60',
       },
       yellow: {
         border: 'border-yellow-400',
         bg: 'bg-yellow-400',
         text: 'text-yellow-300',
         glow: 'hover:shadow-[0_0_25px_rgba(250,204,21,0.25)]',
+        iconWrapper: 'bg-gradient-to-br from-yellow-500/20 to-yellow-500/5 border border-yellow-500/30 group-hover:border-yellow-500/60',
       },
     }
     return colorMap[color] || colorMap.yellow
@@ -189,7 +195,7 @@ export default function ServicesPage() {
                     variants={iconVariants}
                     whileHover="hover"
                   >
-                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-${service.color}-500/20 to-${service.color}-500/5 flex items-center justify-center border border-${service.color}-500/30 group-hover:border-${service.color}-500/60 transition-all duration-300`}>
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 ${colors.iconWrapper}`}>
                       <Icon className={`w-8 h-8 md:w-10 md:h-10 ${colors.text}`} strokeWidth={1.5} />
                     </div>
                   </motion.div>

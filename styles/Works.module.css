@@ -201,20 +201,30 @@
     flex: 1 !important;
   }
   
-  .divider {
+  .centerDivider {
     display: none;
   }
-  
+
   .textContent {
     opacity: 1;
     transform: translateY(0);
   }
-  
+
   .categoryTitle {
     font-size: 2rem;
   }
-  
+
   .categorySubtitle {
     font-size: 1rem;
+  }
+
+  .titleContainer {
+    top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleContainer h2 {
+    letter-spacing: 0.15em;
   }
 }

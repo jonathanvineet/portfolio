@@ -1,3 +1,5 @@
+import { supabase } from './supabaseClient'
+
 export interface GitHubRepo {
   id: number
   name: string
@@ -67,12 +69,55 @@ export async function fetchGitHubRepos(
   }
 }
 
+// Normalize a repo/file name for matching: lowercase, strip anything that
+// isn't a letter or digit, so "World-Editor", "worldeditor.png" and
+// "World_Editor.jpg" all resolve to the same key.
+function normalizeName(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, '')
+}
+
+let softwareImageMapPromise: Promise<Map<string, string>> | null = null
+
+/**
+ * Look up uploaded software project images in the shared Supabase "projects"
+ * storage bucket. Images should be named after their repo (extension and
+ * separators don't matter, e.g. "Worldeditor.png" matches repo "world-editor").
+ * Repos without a matching upload fall back to the generated gradient.
+ */
+function getSoftwareImageMap(): Promise<Map<string, string>> {
+  if (softwareImageMapPromise) return softwareImageMapPromise
+
+  softwareImageMapPromise = (async () => {
+    const map = new Map<string, string>()
+    if (!supabase) return map
+
+    try {
+      const { data, error } = await supabase.storage.from('software_images').list()
+      if (error || !data) return map
+
+      for (const file of data) {
+        const baseName = file.name.replace(/\.[^.]+$/, '')
+        const { data: urlData } = supabase.storage.from('software_images').getPublicUrl(file.name)
+        map.set(normalizeName(baseName), urlData.publicUrl)
+      }
+    } catch (error) {
+      console.error('Error listing software project images:', error)
+    }
+
+    return map
+  })()
+
+  return softwareImageMapPromise
+}
+
 /**
  * Transform GitHub repository data to project format
  */
-export function transformRepoToProject(repo: GitHubRepo): Project {
-  const imageUrl = getProjectImage(repo)
-  
+export async function transformRepoToProject(repo: GitHubRepo): Promise<Project> {
+  const imageMap = await getSoftwareImageMap()
+  const uploadedImage = imageMap.get(normalizeName(repo.name))
+  const imageUrl = uploadedImage || getProjectImage(repo)
+
   return {
     id: repo.id.toString(),
     title: repo.name.split('-').map(word => 
@@ -168,8 +213,8 @@ export async function getSoftwareProjects(
   try {
     const repos = await fetchGitHubRepos(username, token)
     const filteredRepos = filterSoftwareRepos(repos)
-    const projects = filteredRepos.map(transformRepoToProject)
-    
+    const projects = await Promise.all(filteredRepos.map(transformRepoToProject))
+
     // Sort by creation date (newest first)
     return projects.sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()

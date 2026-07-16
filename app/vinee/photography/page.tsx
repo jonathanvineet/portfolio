@@ -63,10 +63,10 @@ export default function Photography() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-dark-bg pt-28 pb-16 px-6">
+    <main className="min-h-screen bg-dark-bg pt-24 sm:pt-28 pb-16 px-4 sm:px-6">
       <div className="container mx-auto max-w-[1800px]">
         <div className="text-center mb-12">
-          <h1 className="font-poppins text-gold text-5xl mb-4">Photography</h1>
+          <h1 className="font-poppins text-gold text-3xl sm:text-4xl md:text-5xl mb-4">Photography</h1>
           <p className="font-inter text-lg text-gray-400 max-w-2xl mx-auto">
             Capturing moments through the lens
           </p>

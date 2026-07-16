@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "scrapee": {
+      "type": "http",
+      "url": "https://your-vercel-url.vercel.app/mcp"
+    }
+  }
+}

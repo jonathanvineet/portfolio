@@ -256,8 +256,8 @@ export default function Skills() {
       </div>
 
       {/* Scrollable content - starts at top, visible above glass */}
-      <div className="relative w-full max-w-5xl mx-auto px-8 py-28" style={{ zIndex: 20 }}>
-        <h2 className="text-gold mb-6 text-center text-4xl">
+      <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-28" style={{ zIndex: 20 }}>
+        <h2 className="text-gold mb-6 text-center text-3xl sm:text-4xl">
           Skills & Technologies
         </h2>
         <p className="text-center text-gray-400 italic mb-8">"I collect tools the way some people collect stamps — only shinier."</p>

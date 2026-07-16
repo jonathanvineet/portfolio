@@ -1,6 +1,6 @@
 /* 3D Project Card - Optimized Animation with Image Background */
 .parent {
-  width: 290px;
+  width: min(290px, 82vw);
   height: 300px;
   perspective: 1000px;
   flex-shrink: 0;
@@ -301,4 +301,20 @@
 
 .parent:hover .card .logo .circle5 {
   transform: translate3d(0, 0, 120px);
+}
+
+@media (max-width: 380px) {
+  .content {
+    padding: 90px 30px 0px 24px;
+    max-height: 170px;
+  }
+
+  .content .title {
+    font-size: 18px;
+  }
+
+  .content .text {
+    font-size: 13px;
+    margin-top: 14px;
+  }
 }
