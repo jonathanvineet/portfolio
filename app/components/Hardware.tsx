@@ -10,17 +10,19 @@ interface Project {
   id: string
   title: string
   description: string
-  image_name: string
-  github_url: string | null
-  demo_url: string | null
-  twitter_url: string | null
-  type: string
-  created_at: string
+}
+
+function normalize(name: string) {
+  return name
+    .replace(/\.[^./]+$/, '')
+    .toLowerCase()
+    .replace(/\s+/g, '')
 }
 
 export default function Hardware() {
   const [mounted, setMounted] = useState(false)
   const [hardwareProjects, setHardwareProjects] = useState<Project[]>([])
+  const [imageMap, setImageMap] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -43,20 +45,10 @@ export default function Hardware() {
 
   useEffect(() => {
     async function fetchProjects() {
-      if (!supabase) {
-        console.error('Supabase client not initialized')
-        setLoading(false)
-        return
-      }
-
       try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('type', 'hardware')
-          .order('created_at', { ascending: false })
-
-        if (error) throw error
+        const res = await fetch('/api/hardware-projects')
+        if (!res.ok) throw new Error('Failed to load hardware projects')
+        const data = await res.json()
         setHardwareProjects(data || [])
       } catch (error) {
         console.error('Error fetching hardware projects:', error)
@@ -65,7 +57,23 @@ export default function Hardware() {
       }
     }
 
+    async function fetchImageMap() {
+      if (!supabase) return
+      try {
+        const { data, error } = await supabase.storage.from('hardware_images').list('', { limit: 200 })
+        if (error) throw error
+        const map: Record<string, string> = {}
+        for (const file of data || []) {
+          map[normalize(file.name)] = file.name
+        }
+        setImageMap(map)
+      } catch (error) {
+        console.error('Error listing hardware images:', error)
+      }
+    }
+
     fetchProjects()
+    fetchImageMap()
   }, [])
 
   const portalRoot = typeof window !== 'undefined' ? document.getElementById('hero-bg-portal') : null
@@ -81,9 +89,11 @@ export default function Hardware() {
     </>
   )
 
-  const getImageUrl = (imageName: string) => {
-    if (!supabase) return '/assets/iot.svg'
-    const { data } = supabase.storage.from('projects').getPublicUrl(imageName)
+  const getImageUrl = (title: string) => {
+    if (!supabase) return '/assets/hardware.jpg'
+    const fileName = imageMap[normalize(title)]
+    if (!fileName) return '/assets/hardware.jpg'
+    const { data } = supabase.storage.from('hardware_images').getPublicUrl(fileName)
     return data.publicUrl
   }
 
@@ -119,16 +129,11 @@ export default function Hardware() {
                 <div className="col-span-full text-center text-gray-400">No hardware projects found.</div>
               ) : (
                 hardwareProjects.map((project) => (
-                  <ProjectCard 
-                    key={project.id} 
-                    title={project.title} 
-                    description={project.description || ''} 
-                    imageUrl={getImageUrl(project.image_name)} 
-                    links={{ 
-                      github: project.github_url || undefined, 
-                      demo: project.demo_url || undefined, 
-                      twitter: project.twitter_url || undefined 
-                    }} 
+                  <ProjectCard
+                    key={project.id}
+                    title={project.title}
+                    description={project.description || ''}
+                    imageUrl={getImageUrl(project.title)}
                   />
                 ))
               )}

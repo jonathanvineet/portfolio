@@ -14,7 +14,7 @@ const customFonts = () => (
 )
 
 export const metadata: Metadata = {
-  title: 'Portfolio | Wayne Enterprise',
+  title: 'jonathanvineet',
   description: 'Modern dark-tech portfolio with Batman/Wayne Enterprises aesthetic',
   icons: {
     icon: '/favicon.svg',

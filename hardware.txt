@@ -1,0 +1,47 @@
+Gyroscope
+A precision-tuned gyroscope build for capturing real-time orientation and motion data.
+
+Rover Robot
+A rugged all-terrain rover engineered for remote exploration and obstacle navigation.
+
+Arduino Robot
+A compact Arduino-powered robot demonstrating core principles of embedded control and sensing.
+
+Raspberry Pi Human Detection on Drone
+An onboard vision system that spots humans in real time from an airborne Raspberry Pi rig.
+
+Drones
+Custom-built drones combining flight control, sensors, and telemetry into one airframe.
+
+ESP32 Home Automation
+A low-power ESP32 hub that brings lights, appliances, and sensors under one smart system.
+
+Sensor Based Smart Home
+A network of environmental and motion sensors driving automated, responsive living spaces.
+
+Completely Automated Lab Setup
+An end-to-end automated lab bench that runs experiments and logs results without manual intervention.
+
+Autonomous Drone System
+A self-navigating drone platform capable of planning and executing flights without a pilot.
+
+AI Controlled Lab
+A machine-learning-driven lab environment that adjusts equipment and workflows on the fly.
+
+Hydroponics System
+An automated hydroponics rig that monitors and maintains ideal growing conditions year-round.
+
+Robot Vacuum
+A DIY robotic vacuum with autonomous navigation and obstacle avoidance for everyday cleaning.
+
+3D Printer
+A custom-built 3D printer designed for precision prototyping and rapid part production.
+
+E-Yantra Drone
+A competition-grade drone developed for the E-Yantra robotics challenge.
+
+Telescope Automation and Logging
+A motorized telescope rig with automated tracking and continuous observation logging.
+
+Solar Powered Industrial Robot
+A solar-powered robotic platform built for sustainable, autonomous industrial tasks.

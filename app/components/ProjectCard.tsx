@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import styles from '../../styles/ProjectCard.module.css'
 
 interface ProjectCardProps {
@@ -19,6 +21,50 @@ export default function ProjectCard({
   imageUrl,
   links = {}
 }: ProjectCardProps) {
+  const [showModal, setShowModal] = useState(false)
+
+  const modal = showModal && (
+    <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
+      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.modalClose} onClick={() => setShowModal(false)} aria-label="Close">
+          ×
+        </button>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={title}
+            className={styles.modalImage}
+            onError={(e) => {
+              e.currentTarget.onerror = null
+              e.currentTarget.src = '/assets/software.jpg'
+            }}
+          />
+        )}
+        <h2 className={styles.modalTitle}>{title}</h2>
+        <p className={styles.modalDescription}>{description}</p>
+        {(links.github || links.demo || links.twitter) && (
+          <div className={styles.modalLinks}>
+            {links.github && (
+              <a href={links.github} target="_blank" rel="noopener noreferrer" className={styles.modalLink}>
+                GitHub
+              </a>
+            )}
+            {links.demo && (
+              <a href={links.demo} target="_blank" rel="noopener noreferrer" className={styles.modalLink}>
+                Demo
+              </a>
+            )}
+            {links.twitter && (
+              <a href={links.twitter} target="_blank" rel="noopener noreferrer" className={styles.modalLink}>
+                Twitter
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+
   return (
     <div className={styles.parent}>
       <div className={styles.card}>
@@ -91,13 +137,22 @@ export default function ProjectCard({
           </div>
           
           <div className={styles.viewMore}>
-            <button className={styles.viewMoreButton}>View more</button>
+            <button
+              className={styles.viewMoreButton}
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowModal(true)
+              }}
+            >
+              View more
+            </button>
             <svg className={styles.svg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
               <path d="m6 9 6 6 6-6"></path>
             </svg>
           </div>
         </div>
       </div>
+      {typeof document !== 'undefined' && modal ? createPortal(modal, document.body) : null}
     </div>
   )
 }
