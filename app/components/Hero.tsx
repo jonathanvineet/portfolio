@@ -340,7 +340,7 @@ export default function Hero() {
             </div>
             
             {/* New Layout: About Me (Left) + 4 Stacks (Right) */}
-            <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6 lg:gap-8 mt-12 w-full">
+            <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6 lg:gap-8 mt-24 w-full">
               
               {/* About Me Section - Left Side (40%) */}
               <div 

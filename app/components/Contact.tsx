@@ -1,7 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import { Mail, Phone, MapPin, Code, Link2, Share2, AlertCircle, CheckCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { Mail, Phone, MapPin, AlertCircle, CheckCircle } from 'lucide-react'
+import { FaGithub, FaLinkedin, FaXTwitter, FaWhatsapp, FaInstagram } from 'react-icons/fa6'
+import { SiGmail } from 'react-icons/si'
+import styles from '../../styles/Hero.module.css'
 
 interface FormData {
   name: string
@@ -23,6 +27,25 @@ export default function Contact() {
 
   const [focusedField, setFocusedField] = useState<string | null>(null)
   const [formStatus, setFormStatus] = useState<FormStatus>({ type: 'idle' })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  useEffect(() => {
+    let root = document.getElementById('hero-bg-portal')
+    if (!root) {
+      root = document.createElement('div')
+      root.id = 'hero-bg-portal'
+      document.body.appendChild(root)
+    }
+    return () => {
+      const el = document.getElementById('hero-bg-portal')
+      if (el && el.childElementCount === 0) el.remove()
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -90,19 +113,47 @@ export default function Contact() {
     }
   }
 
+  const portalRoot = typeof window !== 'undefined' ? document.getElementById('hero-bg-portal') : null
+
+  const fixedBackgrounds = (
+    <>
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <div className={styles.floatingGlow}></div>
+        <div className={styles.floatingGlow}></div>
+        <div className={styles.floatingGlow}></div>
+        <div className={styles.floatingGlow}></div>
+      </div>
+    </>
+  )
+
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center bg-dark-bg px-4 py-20">
+    <section
+      className={styles.heroContainer + ' bg-dark-bg bg-fixed relative flex flex-col items-center justify-center px-4 py-20'}
+      style={{
+        backgroundAttachment: 'fixed',
+        backgroundImage: `linear-gradient(rgba(10,10,12,0.6), rgba(10,10,12,0.6)), url(/assets/contact.jpg)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {mounted && portalRoot ? createPortal(fixedBackgrounds, portalRoot) : fixedBackgrounds}
+
       {/* Header */}
-      <div className="text-center mb-16">
-        <h1 className="text-5xl md:text-6xl text-white mb-4 font-bold">
+      <div className="text-center mb-16 relative" style={{ zIndex: 20 }}>
+        <h1 className="text-blood-red mb-4 text-5xl md:text-6xl font-bold">
           Let's Connect
         </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
           Have a project in mind? Want to collaborate? Or just want to chat about tech? I'm always up for a conversation.
         </p>
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-blood-red to-gold rounded-full"></div>
+          <span className="text-sm text-gray-500">Reach Out</span>
+          <div className="w-20 h-0.5 bg-gradient-to-r from-gold via-blood-red to-transparent rounded-full"></div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 w-full max-w-6xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 w-full max-w-6xl relative" style={{ zIndex: 20 }}>
         {/* Contact Information - Left Side */}
         <div className="space-y-8">
           {/* Contact Details */}
@@ -161,14 +212,14 @@ export default function Contact() {
           <div className="glass-card rounded-2xl p-8">
             <h2 className="text-2xl text-gold mb-6 font-bold">Follow Me</h2>
             
-            <div className="grid grid-cols-3 gap-4">
-              <a 
-                href="https://github.com/jonathanvineet" 
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <a
+                href="https://github.com/jonathanvineet"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-gold/5 transition-all duration-300 group"
               >
-                <Code className="w-8 h-8 text-gray-400 group-hover:text-gold transition-colors mb-2" />
+                <FaGithub className="w-8 h-8 text-gray-400 group-hover:text-gold transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-gold transition-colors">GitHub</span>
               </a>
 
@@ -178,7 +229,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 group"
               >
-                <Link2 className="w-8 h-8 text-gray-400 group-hover:text-blue-400 transition-colors mb-2" />
+                <FaLinkedin className="w-8 h-8 text-gray-400 group-hover:text-blue-400 transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-blue-400 transition-colors">LinkedIn</span>
               </a>
 
@@ -188,8 +239,18 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all duration-300 group"
               >
-                <Share2 className="w-8 h-8 text-gray-400 group-hover:text-sky-400 transition-colors mb-2" />
+                <FaXTwitter className="w-8 h-8 text-gray-400 group-hover:text-sky-400 transition-colors mb-2" />
                 <span className="text-xs text-gray-400 group-hover:text-sky-400 transition-colors">X / Twitter</span>
+              </a>
+
+              <a
+                href="https://www.instagram.com/jonathan_vineet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 hover:border-pink-500/50 hover:bg-pink-500/5 transition-all duration-300 group"
+              >
+                <FaInstagram className="w-8 h-8 text-gray-400 group-hover:text-pink-400 transition-colors mb-2" />
+                <span className="text-xs text-gray-400 group-hover:text-pink-400 transition-colors">Instagram</span>
               </a>
             </div>
           </div>
@@ -315,21 +376,21 @@ export default function Contact() {
               Or reach out directly via:
             </p>
             <div className="flex flex-col gap-2">
-              <a 
-                href="https://wa.me/918122714827?text=Hi%20Vineet%2C%20I%20wanted%20to%20connect%20with%20you" 
-                target="_blank" 
+              <a
+                href="https://wa.me/918122714827?text=Hi%20Vineet%2C%20I%20wanted%20to%20connect%20with%20you"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-gold hover:text-gold/80 transition-colors"
+                className="flex items-center gap-2 text-sm text-gold hover:text-gold/80 transition-colors"
               >
-                💬 WhatsApp
+                <FaWhatsapp className="w-4 h-4" /> WhatsApp
               </a>
-              <a 
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=cvineetjonathan@gmail.com&su=Project%20Inquiry" 
-                target="_blank" 
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=cvineetjonathan@gmail.com&su=Project%20Inquiry"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-gold hover:text-gold/80 transition-colors"
+                className="flex items-center gap-2 text-sm text-gold hover:text-gold/80 transition-colors"
               >
-                📧 Gmail
+                <SiGmail className="w-4 h-4" /> Gmail
               </a>
             </div>
           </div>
