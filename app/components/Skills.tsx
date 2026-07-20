@@ -195,7 +195,7 @@ export default function Skills() {
     >
       {/* Fixed animated diagonal logo background (denser, programmatic offsets) */}
       {showLogoLoops && (
-        <div className="skills-bg-logoloop pointer-events-none fixed inset-0" aria-hidden style={{ zIndex: 0 }}>
+        <div className="skills-bg-logoloop pointer-events-none fixed inset-0 hidden sm:block" aria-hidden style={{ zIndex: 0 }}>
           {(() => {
             const totalTracks = 18 // denser field of icons
             const speedVariants = [120, 100, 140, 110, 90, 130, 80, 105, 95, 125, 98, 135, 115, 88, 142, 102, 128, 92]

@@ -375,7 +375,7 @@ Half insomniac dream stitched together with ambition.
                 className="w-full lg:w-[60%] scroll-animate"
                 data-animation="slide-right"
               >
-                <div className="mt-0 lg:-mt-20" style={{ height: 'clamp(260px, 60vw, 400px)', position: 'relative' }}>
+                <div className="mt-8 lg:-mt-20" style={{ height: 'clamp(260px, 60vw, 400px)', position: 'relative' }}>
                   <CircularGallery
                     items={galleryItems}
                     bend={3} 
