@@ -315,7 +315,7 @@ export default function Hero() {
               <div className="mt-4 flex items-center justify-center gap-3">
                 <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
 
-                <span className="text-xs uppercase tracking-[0.3em] text-gray-400">
+                <span className="text-xs uppercase tracking-[0.3em] text-gray-400 text-center">
                   Always Building
                 </span>
 

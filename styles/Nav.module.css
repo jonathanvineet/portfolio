@@ -2,15 +2,18 @@
 .nav {
   position: fixed;
   top: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   z-index: 1000;
-  width: auto;
-  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navInner {
+  pointer-events: auto;
+  max-width: 600px;
   background: rgba(19, 19, 22, 0.7);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);

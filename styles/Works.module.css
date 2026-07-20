@@ -219,7 +219,8 @@
   }
 
   .titleContainer {
-    top: 2rem;
+    top: 6rem;
+    width: 90%;
   }
 }
 
