@@ -185,22 +185,26 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+  .worksContainer {
+    padding-top: 6rem;
+  }
+
   .splitContainer {
     flex-direction: column;
     height: auto;
     min-height: 600px;
   }
-  
+
   .projectPanel {
     min-height: 300px;
     flex: 1 !important;
   }
-  
+
   .projectPanel.expanded,
   .projectPanel.shrunk {
     flex: 1 !important;
   }
-  
+
   .centerDivider {
     display: none;
   }
@@ -219,8 +223,11 @@
   }
 
   .titleContainer {
-    top: 6rem;
+    position: static;
+    transform: none;
+    top: auto;
     width: 90%;
+    margin: 0 auto 1.5rem;
   }
 }
 
